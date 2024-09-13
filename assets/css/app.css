@@ -3,6 +3,8 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
+body {background-color: #3b0764;}
+
 ul {
     list-style: none;
   }
