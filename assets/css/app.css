@@ -2,9 +2,15 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-/* This file is for your main application CSS */
+/* page background */
 body {background-color: #3b0764;}
 
+/* hides list dots */
 ul {
     list-style: none;
   }
+
+/* Hides profile dropdown on page load */
+[role="menu"] {
+    display: none;
+}

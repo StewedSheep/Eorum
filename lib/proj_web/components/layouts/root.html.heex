@@ -13,7 +13,7 @@
   </head>
 
   <nav class="bg-white border-purple-200 dark:bg-purple-900">
-    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+    <div class="max-w-screen-xl flex flex-wrap content-center justify-between mx-auto p-4">
       <a href={~p"/"} class="flex items-center space-x-3 rtl:space-x-reverse">
         <img src="/images/Elixir_logo.png" class="h-16" alt="Elixir Logo" />
         <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
@@ -21,7 +21,7 @@
         </span>
       </a>
       <%= if @current_user do %>
-        <%!-- Profile notification and messenger icons --%>
+        <%!-- Profile, notification and messenger icons --%>
         <div class="relative flex justify-end items-center md:order-2 mt-4 space-x-10 md:space-x-0 rtl:space-x-reverse">
           <%!-- <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" id="notifications">
           <path d="M256 464c22.779 0 41.411-18.719 41.411-41.6h-82.823c0 22.881 18.633 41.6 41.412 41.6zm134.589-124.8V224.8c0-63.44-44.516-117.518-103.53-131.041V79.2c0-17.682-13.457-31.2-31.059-31.2s-31.059 13.518-31.059 31.2v14.559c-59.015 13.523-103.53 67.601-103.53 131.041v114.4L80 380.8v20.8h352v-20.8l-41.411-41.6z">
@@ -47,7 +47,10 @@
             </span>
           </a>
           <a class="me-4 text-neutral-500 hover:text-neutral-700 focus:text-neutral-700 disabled:text-black/30 dark:text-neutral-200 dark:hover:text-neutral-300 dark:focus:text-neutral-300 [&.active]:text-black/90 dark:[&.active]:text-neutral-400">
-            <span class="[&>svg]:w-16">
+            <span
+              class="[&>svg]:w-16"
+              onclick="document.getElementById('dropdown').style.display = 'inline'"
+            >
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -67,8 +70,10 @@
             </span>
           </a>
         </div>
+
         <%!-- Dropdown menu --%>
         <ul
+          id="dropdown"
           role="menu"
           data-popover="profile-menu"
           data-popover-placement="bottom"
@@ -77,11 +82,6 @@
           <li class="text-center text-[0.8125rem] leading-6 text-pink">
             <%= @current_user.email %>
           </li>
-          <button
-            role="menuitem"
-            class="flex w-full cursor-pointer select-none items-center gap-2 rounded-md px-3 pt-[9px] pb-2 text-start leading-tight outline-none transition-all hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
-          >
-          </button>
           <.link
             href={~p"/users/settings"}
             class="text-[0.8125rem] leading-6"
@@ -232,9 +232,6 @@
       </div>
     </div>
   </nav>
-
-  <footer class="footer footer-center fixed bottom-0 w-full bg-purple-900 text-primary-content p-10">
-  </footer>
 
   <%= @inner_content %>
 </html>

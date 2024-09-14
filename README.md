@@ -14,3 +14,12 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
   * Docs: https://hexdocs.pm/phoenix
   * Forum: https://elixirforum.com/c/phoenix-forum
   * Source: https://github.com/phoenixframework/phoenix
+
+
+TODO:
+
+Profile dropdown alignment
+thread creating and db
+
+
+Maybe footer??

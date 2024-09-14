@@ -4,10 +4,10 @@ defmodule ProjWeb.UserLoginLive do
   def render(assigns) do
     ~H"""
     <div class="mx-auto max-w-sm bg-purple-950 ">
-      <.header class="text-center text-white">
+      <.header class="text-center">
         <a class="font-semibold text-brand text-white">Log in to account</a>
         <br />
-        <p class="text-sm text-white">
+        <p class="text-sm text-zinc-300">
           Don't have an account?
           <.link
             navigate={~p"/users/register"}
