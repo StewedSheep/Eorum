@@ -5,7 +5,7 @@ defmodule ProjWeb.UserSettingsLive do
 
   def render(assigns) do
     ~H"""
-    <.header class="text-center text-white">
+    <.header class="text-center">
       <a class="font-semibold text-brand text-white">
         Account Settings
       </a>

@@ -8,14 +8,16 @@ defmodule ProjWeb.UserRegistrationLive do
     ~H"""
     <div class="mx-auto max-w-sm">
       <.header class="text-center">
-        Register for an account
-        <:subtitle>
+        <a class="font-semibold text-brand text-white">
+          Register for an account
+        </a>
+        <p class="text-sm text-zinc-300">
           Already registered?
           <.link navigate={~p"/users/log_in"} class="font-semibold text-brand hover:underline">
             Log in
           </.link>
           to your account now.
-        </:subtitle>
+        </p>
       </.header>
 
       <.simple_form
@@ -32,6 +34,7 @@ defmodule ProjWeb.UserRegistrationLive do
         </.error>
 
         <.input field={@form[:email]} type="email" label="Email" required />
+        <.input field={@form[:username]} type="text" label="Username" required />
         <.input field={@form[:password]} type="password" label="Password" required />
 
         <:actions>

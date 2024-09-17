@@ -7,8 +7,10 @@ defmodule ProjWeb.UserForgotPasswordLive do
     ~H"""
     <div class="mx-auto max-w-sm">
       <.header class="text-center">
-        Forgot your password?
-        <:subtitle>We'll send a password reset link to your inbox</:subtitle>
+        <a class="font-semibold text-brand text-white">
+          Forgot your password?
+        </a>
+        <p class="text-sm text-zinc-300">We'll send a password reset link to your inbox</p>
       </.header>
 
       <.simple_form for={@form} id="reset_password_form" phx-submit="send_email">
@@ -19,9 +21,9 @@ defmodule ProjWeb.UserForgotPasswordLive do
           </.button>
         </:actions>
       </.simple_form>
-      <p class="text-center text-sm mt-4">
-        <.link href={~p"/users/register"}>Register</.link>
-        | <.link href={~p"/users/log_in"}>Log in</.link>
+      <p class="text-center text-sm mt-4 text-pink-600">
+        <.link class="text-pink-600" href={~p"/users/register"}>Register</.link>
+        | <.link class="text-pink-600" href={~p"/users/log_in"}>Log in</.link>
       </p>
     </div>
     """
