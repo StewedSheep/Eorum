@@ -21,7 +21,7 @@ defmodule ProjWeb.ThreadsLive do
     ~H"""
     <h1>Posts</h1>
 
-    <.form for={@form} phx-submit="save">
+    <.form for={@form} phx-submit="save" phx-change="validate">
       <.input field={@form[:topic]} placeholder="Title" autocomplete="off" />
       <.input field={@form[:body]} placeholder="Content" autocomplete="off" />
       <.button phx-disable-with="posting...">
@@ -57,5 +57,14 @@ defmodule ProjWeb.ThreadsLive do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :form, to_form(changeset))}
     end
+  end
+
+  def handle_event("validate", %{"thread" => thread_params}, socket) do
+    changeset =
+      %Thread{}
+      |> Threads.change_thread(thread_params)
+      |> Map.put(:action, :validate)
+
+    {:noreply, assign(socket, form: to_form(changeset))}
   end
 end
