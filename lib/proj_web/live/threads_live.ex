@@ -23,8 +23,8 @@ defmodule ProjWeb.ThreadsLive do
 
     <.form for={@form} phx-submit="save" phx-change="validate">
       <.input field={@form[:topic]} placeholder="Title" autocomplete="off" />
-      <.input field={@form[:body]} placeholder="Content" autocomplete="off" />
-      <.button phx-disable-with="posting...">
+      <.input field={@form[:body]} placeholder="Content" autocomplete="off" phx-debounce="blur" />
+      <.button class="buttons flex" phx-disable-with="posting...">
         Post
       </.button>
     </.form>
@@ -40,16 +40,17 @@ defmodule ProjWeb.ThreadsLive do
         %{"thread" => thread_params},
         socket
       ) do
-    # Add user id to param map
-    thread_param = Map.merge(thread_params, %{"user_id" => socket.assigns.current_user.id})
     # create new thread
-    case Threads.create_thread(thread_param) do
+    params = Map.put(thread_params, "user_id", socket.assigns.current_user.id)
+    IO.inspect(params, label: "combined params")
+
+    case Threads.create_thread(params) do
       # happy path
       {:ok, thread} ->
         # update existing threads list
         socket = update(socket, :threads, fn threads -> [thread | threads] end)
 
-        changeset = Threads.change_thread(%Thread{})
+        changeset = Threads.change_thread(%Thread{}, params)
 
         {:noreply, assign(socket, :form, to_form(changeset))}
 

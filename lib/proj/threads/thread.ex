@@ -3,7 +3,7 @@ defmodule Proj.Threads.Thread do
   import Ecto.Changeset
 
   schema "threads" do
-    field :user_id, :binary_id
+    field :user_id, :integer
     field :topic, :string
     field :body, :string
 
@@ -14,7 +14,6 @@ defmodule Proj.Threads.Thread do
     thread
     |> cast(attrs, [:user_id, :topic, :body])
     |> validate_required([:user_id, :topic, :body])
-    |> validate_length(:user_id, min: 1)
     |> validate_length(:topic, min: 1)
     |> validate_length(:body, min: 1)
   end
