@@ -1,66 +1,71 @@
-# defmodule ProjWeb.ThreadCreate do
-#   use ProjWeb, :live_view
+defmodule ProjWeb.PostFormComponent do
+  use ProjWeb, :live_component
 
-#   alias Proj.Threads
+  alias Proj.Threads
+  alias Proj.Threads.Thread
 
-#   def render(assigns) do
-#     ~H"""
-#     <div class="mx-auto max-w-sm">
-#       <.header class="text-center">
-#         <a class="font-semibold text-brand text-white">
-#           New Thread
-#         </a>
-#       </.header>
+  def render(assigns) do
+    ~H"""
+    <div class="box-border p-4 border-4 rounded border-purple-900 bg-purple-800">
+      <h1>Posts</h1>
 
-#       <.simple_form
-#         for={@form}
-#         id="thread_form"
-#         phx-submit="save"
-#         phx-change="validate"
-#         phx-trigger-action={@trigger_submit}
-#         method="post"
-#       >
-#         <.error :if={@check_errors}>
-#           Oops, something went wrong! Please check the errors below.
-#         </.error>
+      <.form for={@form} phx-submit="save" phx-change="validate" phx-target={@myself}>
+        <.input field={@form[:topic]} placeholder="Title" autocomplete="off" />
+        <.input field={@form[:body]} placeholder="Content" autocomplete="off" phx-debounce="blur" />
+        <.button
+          class="buttons flex"
+          style="margin-top: 10px; margin-right: 10px;"
+          phx-disable-with="posting..."
+        >
+          Post
+        </.button>
+      </.form>
+    </div>
+    """
+  end
 
-#         <.input field={@form[:email]} type="email" label="Email" required />
-#         <.input field={@form[:username]} type="text" label="Username" required />
-#         <.input field={@form[:password]} type="password" label="Password" required />
+  def mount(socket) do
+    changeset = Threads.change_thread(%Thread{})
 
-#         <:actions>
-#           <.button phx-disable-with="Creating post..." class="w-full">Post</.button>
-#         </:actions>
-#       </.simple_form>
-#     </div>
-#     """
-#   end
+    socket =
+      assign(socket,
+        form: to_form(changeset)
+      )
 
+    {:ok, socket}
+  end
 
-# def mount(_params, _session, socket) do
-#   changeset = Threads.list_threads()
+  def handle_event(
+        "save",
+        %{"thread" => thread_params},
+        socket
+      ) do
+    # create new thread
+    params = Map.put(thread_params, "user_id", socket.assigns.current_user.id)
 
-#   socket =
-#     socket
-#     |> assign(trigger_submit: false, check_errors: false)
-#     |> assign_form(changeset)
+    case Threads.create_thread(params) do
+      # happy path
+      {:ok, _thread} ->
+        # NOTE: NEED TO THINK IF SHOULD REDIRECT TO THE POST AFTER POSTING
+        # update existing threads list
+        # socket = update(socket, :threads, fn threads -> [thread | threads] end)
 
-#   {:ok, socket, temporary_assigns: [form: nil]}
-# end
+        changeset = Threads.change_thread(%Thread{}, params)
 
-# def handle_event("save", %{"thread" => thread_params}, socket) do
-# end
+        {:noreply, assign(socket, :form, to_form(changeset))}
 
-# def handle_event("validate", %{"thread" => thread_params}, socket) do
-# end
+      # sad path
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, :form, to_form(changeset))}
+    end
+  end
 
-# defp assign_form(socket, %Ecto.Changeset{} = changeset) do
-#   form = to_form(changeset, as: "thread")
+  def handle_event("validate", %{"thread" => thread_params}, socket) do
+    changeset =
+      %Thread{}
+      |> Threads.change_thread(thread_params)
+      |> Map.put(:action, :validate)
 
-#   if changeset.valid? do
-#     assign(socket, form: form, check_errors: false)
-#   else
-#     assign(socket, form: form)
-#   end
-# end
-# end
+    {:noreply, assign(socket, form: to_form(changeset))}
+  end
+end
