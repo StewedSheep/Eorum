@@ -67,6 +67,7 @@ defmodule ProjWeb.Router do
     live_session :require_authenticated_user,
       on_mount: [{ProjWeb.UserAuth, :ensure_authenticated}] do
       live "/thread", ThreadsLive
+      live "/addfriend", AddFriendLive
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
     end

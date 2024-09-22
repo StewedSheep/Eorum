@@ -27,6 +27,14 @@ defmodule Proj.Accounts do
   end
 
   @doc """
+  Gets all users
+  """
+
+  def get_users() do
+    Repo.all(from u in User, order_by: [desc: u.id()])
+  end
+
+  @doc """
   Gets a user by email and password.
 
   ## Examples
