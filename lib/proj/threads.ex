@@ -6,6 +6,7 @@ defmodule Proj.Threads do
 
   def list_threads do
     Repo.all(from t in Thread, order_by: [desc: t.id])
+    |> Repo.preload(:users)
   end
 
   def create_thread(attrs \\ %{}) do

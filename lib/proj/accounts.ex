@@ -5,7 +5,6 @@ defmodule Proj.Accounts do
 
   import Ecto.Query, warn: false
   alias Proj.Repo
-
   alias Proj.Accounts.{User, UserToken, UserNotifier}
 
   ## Database getters
@@ -31,7 +30,8 @@ defmodule Proj.Accounts do
   """
 
   def get_users() do
-    Repo.all(from u in User, order_by: [desc: u.id()])
+    Repo.all(User)
+    |> Repo.preload([:sent_friendships, :received_friendships])
   end
 
   @doc """

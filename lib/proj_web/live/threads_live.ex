@@ -3,7 +3,6 @@ defmodule ProjWeb.ThreadsLive do
 
   alias ProjWeb.PostFormComponent
   alias Proj.Threads
-  alias Proj.Accounts
 
   def mount(_params, _session, socket) do
     threads = Threads.list_threads()
@@ -30,7 +29,7 @@ defmodule ProjWeb.ThreadsLive do
               <div class="flex items-center justify-between">
                 <h2 class="text-lg font-semibold text-gray-900"><%= thread.topic %></h2>
                 <div class="text-sm text-gray-700 flex flex-col items-end">
-                  <%= Accounts.get_user!(thread.user_id).username %>
+                  <%= thread.users.username %>
                   <small class="text-sm text-gray-700">
                     <%= Calendar.strftime(thread.inserted_at, "%H:%M %d %b %y") %>
                   </small>

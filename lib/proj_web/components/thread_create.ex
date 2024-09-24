@@ -66,12 +66,11 @@ defmodule ProjWeb.PostFormComponent do
         socket
       ) do
     # create new thread
-    params = Map.put(thread_params, "user_id", socket.assigns.current_user.id)
+    params = Map.put(thread_params, "users_id", socket.assigns.current_user.id)
 
     case Threads.create_thread(params) do
       # happy path
       {:ok, _thread} ->
-        # NOTE: NEED TO THINK IF SHOULD REDIRECT TO THE POST AFTER POSTING
         # update existing threads list
         # socket = update(socket, :threads, fn threads -> [thread | threads] end)
 
@@ -94,3 +93,6 @@ defmodule ProjWeb.PostFormComponent do
     {:noreply, assign(socket, form: to_form(changeset))}
   end
 end
+
+# TODO: KEEP COLLAPSE STATE ON FORM
+# NOTE: NEED TO THINK IF SHOULD REDIRECT TO THE POST AFTER POSTING

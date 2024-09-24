@@ -1,6 +1,8 @@
 defmodule Proj.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Proj.Friends.Friend
+  alias Proj.Threads.Thread
 
   schema "users" do
     field :email, :string
@@ -9,6 +11,10 @@ defmodule Proj.Accounts.User do
     field :hashed_password, :string, redact: true
     field :current_password, :string, virtual: true, redact: true
     field :confirmed_at, :utc_datetime
+
+    has_many :threads, Thread, foreign_key: :users_id
+    has_many :sent_friendships, Friend, foreign_key: :user1
+    has_many :received_friendships, Friend, foreign_key: :user2
 
     timestamps(type: :utc_datetime)
   end
