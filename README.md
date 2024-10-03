@@ -23,3 +23,4 @@ thread creating and db
 
 
 Maybe footer??
+Maybe friendslist filtering more effective query

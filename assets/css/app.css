@@ -9,8 +9,3 @@ body {background-color: #3b0764;}
 ul {
     list-style: none;
   }
-
-/* Hides profile dropdown on page load */
-[role="menu"] {
-    display: none;
-}

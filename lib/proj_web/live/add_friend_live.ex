@@ -22,60 +22,25 @@ defmodule ProjWeb.AddFriendLive do
                 <p class="text-slate-500 text-sm">
                   <%= user.email %>
                 </p>
-
-                <%= for friend <- user.received_friendships do %>
-                  <%!-- if current user dosent share a friend request with the user --%>
-                  <%= if (friend.user1 == user.id and friend.user2 != @current_user.id) or
-                         (friend.user1 != user.id and friend.user2 == @current_user.id) or
-                         (friend.user2 == user.id and friend.user1 != @current_user.id) or
-                         (friend.user2 != user.id and friend.user1 == @current_user.id) do %>
-                    <.button phx-click="add_friend" phx-value-id={user.id}>
-                      Send friend request
-                    </.button>
-                  <% end %>
-                  <%!-- if user and current user have a pending friend request --%>
-                  <%= if friend.user2 == @current_user.id and friend.user1 == user.id and friend.accepted == false do %>
-                    <.button class="bg-green-700" phx-click="accept_friend" phx-value-id={user.id}>
-                      Accept friend request
-                    </.button>
-                  <% end %>
-                  <%= if friend.user1 == @current_user.id and friend.user2 == user.id and friend.accepted == false do %>
-                    <.button class="bg-red-700" phx-click="rem_request" phx-value-id={user.id}>
-                      Remove friend request
-                    </.button>
-                  <% end %>
-                  <%!-- if user and current user are friends --%>
-                  <%= if (friend.user1 == @current_user.id and friend.user2 == user.id and friend.accepted == true) or
-                         (friend.user1 == user.id and friend.user2 == @current_user.id and friend.accepted == true) do %>
-                    <.button class="bg-gray-700" phx-click="rem_friend" phx-value-id={user.id}>
-                      Delete friend
-                    </.button>
-                  <% end %>
-                <% end %>
-                <%!-- case where recived_friendships and sent_friendships is empty --%>
-                <%= if user.received_friendships == [] and user.sent_friendships == [] do %>
+                <%= if friendship_status(@current_user.id, user.id) == :none do %>
                   <.button phx-click="add_friend" phx-value-id={user.id}>
                     Send friend request
                   </.button>
                 <% end %>
-                <%= for friend <- user.sent_friendships do %>
-                  <%!-- if user and current user have a pending friend request --%>
-                  <%= if friend.user2 == @current_user.id and friend.user1 == user.id and friend.accepted == false do %>
-                    <.button class="bg-green-700" phx-click="accept_friend" phx-value-id={user.id}>
-                      Accept friend request
-                    </.button>
-                  <% end %>
-                  <%= if friend.user1 == @current_user.id and friend.user2 == user.id and friend.accepted == false do %>
-                    <.button class="bg-red-700" phx-click="rem_request" phx-value-id={user.id}>
-                      Remove friend request
-                    </.button>
-                  <% end %>
-                  <%= if (friend.user1 == @current_user.id and friend.user2 == user.id and friend.accepted == true) or
-                         (friend.user1 == user.id and friend.user2 == @current_user.id and friend.accepted == true) do %>
-                    <.button class="bg-gray-700" phx-click="rem_friend" phx-value-id={user.id}>
-                      Delete friend
-                    </.button>
-                  <% end %>
+                <%= if friendship_status(@current_user.id, user.id) == :rec do %>
+                  <.button class="bg-green-700" phx-click="accept_friend" phx-value-id={user.id}>
+                    Accept friend request
+                  </.button>
+                <% end %>
+                <%= if friendship_status(@current_user.id, user.id) == :sent do %>
+                  <.button class="bg-red-700" phx-click="rem_request" phx-value-id={user.id}>
+                    Remove friend request
+                  </.button>
+                <% end %>
+                <%= if friendship_status(@current_user.id, user.id) == :friends do %>
+                  <.button class="bg-gray-700" phx-click="rem_friend" phx-value-id={user.id}>
+                    Delete friend
+                  </.button>
                 <% end %>
               </div>
             </div>
@@ -92,53 +57,60 @@ defmodule ProjWeb.AddFriendLive do
   def mount(_params, _session, socket) do
     users = Accounts.get_users()
 
-    for user <- users do
-      IO.inspect(user, label: "received_friendships user1")
-
-      # for friend <- user.sent_friendships do
-      #   IO.inspect(friend, label: "sent_friendships user1")
-      # end
-    end
-
-    socket =
-      assign(socket,
-        users: users
-      )
-
-    {:ok, socket}
+    {:ok,
+     assign(socket,
+       users: users
+     )}
   end
 
   @doc """
   Handles the "add_friend" event by creating a new friend relationship between the current user and the selected user.
   """
   def handle_event("add_friend", %{"id" => id}, socket) do
-    Friends.create_friend(%{user1: socket.assigns.current_user.id, user2: id})
-    {:reply, %{status: :ok, message: "Friend added successfully"}, socket}
-  end
-
-  def handle_event("rem_request", %{"id" => id}, socket) do
-    Friends.rem_request(%{
-      accepted: false,
-      user1: socket.assigns.current_user.id,
-      user2: id
-    })
-
-    {:reply, %{status: :ok, message: "Removed Friend Request"}, socket}
+    Friends.create_friend(socket.assigns.current_user.id, String.to_integer(id))
+    users = Accounts.get_users()
+    {:reply, %{status: :ok, message: "Friend added successfully"}, assign(socket, users: users)}
   end
 
   def handle_event("rem_friend", %{"id" => id}, socket) do
-    Friends.rem_request(%{
-      accepted: false,
-      user1: socket.assigns.current_user.id,
-      user2: id
-    })
-
-    {:reply, %{status: :ok, message: "Removed Friend Request"}, socket}
+    Friends.rem_friend(socket.assigns.current_user.id, String.to_integer(id))
+    users = Accounts.get_users()
+    {:reply, %{status: :ok, message: "Removed Friend"}, assign(socket, users: users)}
   end
 
   def handle_event("accept_friend", %{"id" => id}, socket) do
-    Friends.create_friend(%{user1: socket.assigns.current_user.id, user2: id})
+    Friends.accept_friend(socket.assigns.current_user.id, String.to_integer(id))
     users = Accounts.get_users()
-    {:ok, assign(socket, users: users)}
+    {:reply, %{status: :ok, message: "Friend added successfully"}, assign(socket, users: users)}
+  end
+
+  def handle_event("rem_request", %{"id" => id}, socket) do
+    Friends.rem_request(socket.assigns.current_user.id, String.to_integer(id))
+    users = Accounts.get_users()
+    {:reply, %{status: :ok, message: "Removed Friend Request"}, assign(socket, users: users)}
+  end
+
+  def friendship_status(current_user_id, user_id) do
+    case Friends.frnd_status(current_user_id, user_id) do
+      nil ->
+        # No friendship record exists, return :none
+        :none
+
+      friend ->
+        # Friendship record exists, determine the status
+        cond do
+          friend.accepted ->
+            # Friendship is accepted, return :friends
+            :friends
+
+          friend.user1 == current_user_id ->
+            # Current user sent the friend request, return :sent
+            :sent
+
+          true ->
+            # Other user sent the friend request, return :rec
+            :rec
+        end
+    end
   end
 end
