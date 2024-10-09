@@ -1,0 +1,10 @@
+ id |          email           |  username   |                       hashed_password                        | confirmed_at |     inserted_at     |     updated_at      
+----+--------------------------+-------------+--------------------------------------------------------------+--------------+---------------------+---------------------
+ 10 | demo@demo.com            | Admin       | $2b$12$VK3W7oRrAryIxW6NomUHzeKDSTKYAmHMNjToBZGkJRodTcmeNTSEe |              | 2024-09-17 11:40:15 | 2024-09-17 11:40:15
+ 11 | Sander.vali.03@gmail.com | StewedSheep | $2b$12$oIq5c4CGx3bDLrJepVyFDusS/nS0ZSRMCjZ3P/hFHpbHOd8kecPqm |              | 2024-09-22 15:55:11 | 2024-09-22 15:55:11
+ 12 | SomeRandomGuy@gmail.com  | RandomGuy   | $2b$12$0ll/Lp7.asuwowZPY0XekOe10f5TAN7VdC2AeVFOzKS81PGumDqNe |              | 2024-09-22 15:55:54 | 2024-09-22 15:55:54
+ 13 | demo1@gmail.com          | Friend 1    | $2b$12$wF2W1h5.SpwNsQj6ubqiOufuOM3bfF4M/9dLakJEhPdVHUpwnJzK2 |              | 2024-10-03 14:22:47 | 2024-10-03 14:22:47
+ 14 | demo2@gmail.com          | Friend 2    | $2b$12$TUXP6Vutsx54x0ds8GUR8./zG8B/g8QDadw6Y3sCW2LLchaWM4HtG |              | 2024-10-03 14:23:13 | 2024-10-03 14:23:13
+ 15 | demo3@gmail.com          | Friend 3    | $2b$12$TJKMpPRAwbp6M8EQpXMICeOb8EePq3vzOveILmuWTzTgNg9xX2xEO |              | 2024-10-03 14:23:34 | 2024-10-03 14:23:34
+(6 rows)
+

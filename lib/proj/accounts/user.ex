@@ -13,9 +13,8 @@ defmodule Proj.Accounts.User do
     field :confirmed_at, :utc_datetime
 
     has_many :threads, Thread, foreign_key: :users_id
-    has_many :sent_friendships, Friend, foreign_key: :user1
-    has_many :received_friendships, Friend, foreign_key: :user2
-
+    has_many :sent_requests, Friend, foreign_key: :sender_id
+    has_many :received_requests, Friend, foreign_key: :receiver_id
     timestamps(type: :utc_datetime)
   end
 
@@ -68,11 +67,7 @@ defmodule Proj.Accounts.User do
   defp validate_password(changeset, opts) do
     changeset
     |> validate_required([:password])
-    |> validate_length(:password, min: 12, max: 72)
-    # Examples of additional password validation:
-    # |> validate_format(:password, ~r/[a-z]/, message: "at least one lower case character")
-    # |> validate_format(:password, ~r/[A-Z]/, message: "at least one upper case character")
-    # |> validate_format(:password, ~r/[!?@#$%^&*_0-9]/, message: "at least one digit or punctuation character")
+    |> validate_length(:password, min: 8, max: 32)
     |> maybe_hash_password(opts)
   end
 

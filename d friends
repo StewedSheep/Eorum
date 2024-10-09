@@ -1,0 +1,20 @@
+                                            Table "public.users"
+     Column      |              Type              | Collation | Nullable |              Default              
+-----------------+--------------------------------+-----------+----------+-----------------------------------
+ id              | bigint                         |           | not null | nextval('users_id_seq'::regclass)
+ email           | citext                         |           | not null | 
+ username        | character varying(255)         |           | not null | 
+ hashed_password | character varying(255)         |           | not null | 
+ confirmed_at    | timestamp(0) without time zone |           |          | 
+ inserted_at     | timestamp(0) without time zone |           | not null | 
+ updated_at      | timestamp(0) without time zone |           | not null | 
+Indexes:
+    "users_pkey" PRIMARY KEY, btree (id)
+    "users_email_index" UNIQUE, btree (email)
+    "users_username_index" UNIQUE, btree (username)
+Referenced by:
+    TABLE "friends" CONSTRAINT "friends_user1_fkey" FOREIGN KEY (user1) REFERENCES users(id)
+    TABLE "friends" CONSTRAINT "friends_user2_fkey" FOREIGN KEY (user2) REFERENCES users(id)
+    TABLE "threads" CONSTRAINT "threads_users_id_fkey" FOREIGN KEY (users_id) REFERENCES users(id)
+    TABLE "users_tokens" CONSTRAINT "users_tokens_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+

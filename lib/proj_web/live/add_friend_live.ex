@@ -57,6 +57,8 @@ defmodule ProjWeb.AddFriendLive do
   def mount(_params, _session, socket) do
     users = Accounts.get_users()
 
+    for user <- users, do: IO.inspect(user)
+
     {:ok,
      assign(socket,
        users: users
@@ -103,7 +105,7 @@ defmodule ProjWeb.AddFriendLive do
             # Friendship is accepted, return :friends
             :friends
 
-          friend.user1 == current_user_id ->
+          friend.sender_id == current_user_id ->
             # Current user sent the friend request, return :sent
             :sent
 

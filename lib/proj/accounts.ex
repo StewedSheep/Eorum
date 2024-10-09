@@ -31,7 +31,7 @@ defmodule Proj.Accounts do
 
   def get_users() do
     Repo.all(User)
-    |> Repo.preload([:sent_friendships, :received_friendships])
+    |> Repo.preload([:sent_requests, :received_requests])
   end
 
   @doc """

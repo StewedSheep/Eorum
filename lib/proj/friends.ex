@@ -6,7 +6,10 @@ defmodule Proj.Friends do
   def get_friends(current_user_id) do
     query =
       from f in Friend,
-        where: (f.user1 == ^current_user_id or f.user2 == ^current_user_id) and f.accepted == true
+        where:
+          (f.sender_id == ^current_user_id or f.receiver_id == ^current_user_id) and
+            f.accepted == true,
+        preload: [:sender_user, :receiver_user]
 
     Repo.all(query)
   end
@@ -15,8 +18,8 @@ defmodule Proj.Friends do
     query =
       from f in Friend,
         where:
-          (f.user1 == ^current_user_id and f.user2 == ^user_id) or
-            (f.user1 == ^user_id and f.user2 == ^current_user_id)
+          (f.sender_id == ^current_user_id and f.receiver_id == ^user_id) or
+            (f.sender_id == ^user_id and f.receiver_id == ^current_user_id)
 
     Repo.one(query)
   end
@@ -25,8 +28,8 @@ defmodule Proj.Friends do
     query =
       from f in Friend,
         where:
-          (f.user1 == ^current_user_id and f.user2 == ^user_id) or
-            (f.user2 == ^current_user_id and f.user1 == ^user_id)
+          (f.sender_id == ^current_user_id and f.receiver_id == ^user_id) or
+            (f.receiver_id == ^current_user_id and f.sender_id == ^user_id)
 
     case Repo.exists?(query) do
       true ->
@@ -35,7 +38,7 @@ defmodule Proj.Friends do
 
       false ->
         # Record doesn't exist, create a new one
-        %Friend{user1: current_user_id, user2: user_id}
+        %Friend{sender_id: current_user_id, receiver_id: user_id}
         |> Repo.insert()
     end
   end
@@ -44,8 +47,8 @@ defmodule Proj.Friends do
     query =
       from f in Friend,
         where:
-          (f.user1 == ^user_id and f.user2 == ^current_user_id and f.accepted == true) or
-            (f.user1 == ^current_user_id and f.user2 == ^user_id and f.accepted == true)
+          (f.sender_id == ^user_id and f.receiver_id == ^current_user_id and f.accepted == true) or
+            (f.sender_id == ^current_user_id and f.receiver_id == ^user_id and f.accepted == true)
 
     case Repo.exists?(query) do
       true ->
@@ -60,8 +63,8 @@ defmodule Proj.Friends do
     query =
       from f in Friend,
         where:
-          (f.user1 == ^user_id and f.user2 == ^current_user_id and f.accepted == false) or
-            (f.user1 == ^current_user_id and f.user2 == ^user_id and f.accepted == false)
+          (f.sender_id == ^user_id and f.receiver_id == ^current_user_id and f.accepted == false) or
+            (f.sender_id == ^current_user_id and f.receiver_id == ^user_id and f.accepted == false)
 
     case Repo.exists?(query) do
       true ->
@@ -76,8 +79,8 @@ defmodule Proj.Friends do
     query =
       from f in Friend,
         where:
-          (f.user1 == ^user_id and f.user2 == ^current_user_id and f.accepted == false) or
-            (f.user1 == ^current_user_id and f.user2 == ^user_id and f.accepted == false)
+          (f.sender_id == ^user_id and f.receiver_id == ^current_user_id and f.accepted == false) or
+            (f.sender_id == ^current_user_id and f.receiver_id == ^user_id and f.accepted == false)
 
     case Repo.exists?(query) do
       true ->
