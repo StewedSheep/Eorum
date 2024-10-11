@@ -22,25 +22,23 @@ defmodule ProjWeb.AddFriendLive do
                 <p class="text-slate-500 text-sm">
                   <%= user.email %>
                 </p>
-                <%= if friendship_status(@current_user.id, user.id) == :none do %>
-                  <.button phx-click="add_friend" phx-value-id={user.id}>
-                    Send friend request
-                  </.button>
-                <% end %>
-                <%= if friendship_status(@current_user.id, user.id) == :rec do %>
-                  <.button class="bg-green-700" phx-click="accept_friend" phx-value-id={user.id}>
-                    Accept friend request
-                  </.button>
-                <% end %>
-                <%= if friendship_status(@current_user.id, user.id) == :sent do %>
-                  <.button class="bg-red-700" phx-click="rem_request" phx-value-id={user.id}>
-                    Remove friend request
-                  </.button>
-                <% end %>
-                <%= if friendship_status(@current_user.id, user.id) == :friends do %>
-                  <.button class="bg-gray-700" phx-click="rem_friend" phx-value-id={user.id}>
-                    Delete friend
-                  </.button>
+                <%= case friendship_status(@current_user.id, user.id) do %>
+                  <% :none -> %>
+                    <.button phx-click="add_friend" phx-value-id={user.id}>
+                      Send friend request
+                    </.button>
+                  <% :rec -> %>
+                    <.button class="bg-green-700" phx-click="accept_friend" phx-value-id={user.id}>
+                      Accept friend request
+                    </.button>
+                  <% :sent -> %>
+                    <.button class="bg-red-700" phx-click="rem_request" phx-value-id={user.id}>
+                      Remove friend request
+                    </.button>
+                  <% :friends -> %>
+                    <.button class="bg-gray-700" phx-click="rem_friend" phx-value-id={user.id}>
+                      Delete friend
+                    </.button>
                 <% end %>
               </div>
             </div>

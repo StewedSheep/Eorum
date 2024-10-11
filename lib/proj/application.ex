@@ -14,6 +14,7 @@ defmodule Proj.Application do
       {Phoenix.PubSub, name: Proj.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: Proj.Finch},
+      ProjWeb.Presence,
       # Start a worker by calling: Proj.Worker.start_link(arg)
       # {Proj.Worker, arg},
       # Start to serve requests, typically the last entry
