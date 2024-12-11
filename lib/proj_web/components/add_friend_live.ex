@@ -6,22 +6,19 @@ defmodule ProjWeb.AddFriendLive do
 
   def render(assigns) do
     ~H"""
-    <div class="relative flex w-96 flex-col rounded-lg border border-slate-200 bg-white shadow-sm">
+    <div class="relative flex flex-col">
       <nav class="flex min-w-[240px] flex-col gap-1 p-1.5">
         <%= for user <- @users do %>
           <%= if user.id != @current_user.id do %>
             <div
               role="button"
-              class="text-slate-800 flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100"
+              class="flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 rounded-lg border border-slate-200 shadow-sm"
             >
               <div class="mr-4 grid place-items-center"></div>
               <div>
-                <h6 class="text-slate-800 font-medium">
+                <h6 class=" font-medium p-3">
                   <%= user.username %> #<%= user.id %>
                 </h6>
-                <p class="text-slate-500 text-sm">
-                  <%= user.email %>
-                </p>
                 <%= case friendship_status(@current_user.id, user.id) do %>
                   <% :none -> %>
                     <.button phx-click="add_friend" phx-value-id={user.id}>
@@ -52,10 +49,9 @@ defmodule ProjWeb.AddFriendLive do
   @doc """
   Loads list of all users to the socket.
   """
-  def mount(_params, _session, socket) do
+  def mount(_params, %{"user_id" => user_id}, socket) do
+    socket = socket |> assign_new(:current_user, fn -> Proj.Accounts.get_user!(user_id) end)
     users = Accounts.get_users()
-
-    for user <- users, do: IO.inspect(user)
 
     {:ok,
      assign(socket,
@@ -112,5 +108,10 @@ defmodule ProjWeb.AddFriendLive do
             :rec
         end
     end
+  end
+
+  def update(assigns, socket) do
+    socket = assign(socket, assigns)
+    {:ok, socket}
   end
 end

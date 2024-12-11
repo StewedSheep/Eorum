@@ -20,7 +20,8 @@ config :proj, ProjWeb.Endpoint,
     layout: false
   ],
   pubsub_server: Proj.PubSub,
-  live_view: [signing_salt: "HjoHmrQD"]
+  live_view: [signing_salt: "HjoHmrQD"],
+  secret_key_base: "u0TAKNo/Zb5t2gQAZbiqG70AFrDehetlW2xffesG7hNq3Sc5YAMxhD6sugjfyTXM"
 
 # Configures the mailer
 #

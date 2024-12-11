@@ -11,6 +11,7 @@ defmodule ProjWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_user
+    plug ProjWeb.Plugs.PutUserToken
   end
 
   pipeline :api do
@@ -19,9 +20,11 @@ defmodule ProjWeb.Router do
 
   scope "/", ProjWeb do
     pipe_through :browser
-
-    get "/", PageController, :home
   end
+
+  # def spy(conn, _opts) do
+  #   IO.inspect(conn, label: "SPY SOCKET")
+  # end
 
   # Other scopes may use custom stacks.
   # scope "/api", ProjWeb do
@@ -51,7 +54,9 @@ defmodule ProjWeb.Router do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
     live_session :redirect_if_user_is_authenticated,
+      root_layout: {ProjWeb.Layouts, :root_unauth},
       on_mount: [{ProjWeb.UserAuth, :redirect_if_user_is_authenticated}] do
+      live "/", IndexUnAuthLive
       live "/users/register", UserRegistrationLive, :new
       live "/users/log_in", UserLoginLive, :new
       live "/users/reset_password", UserForgotPasswordLive, :new
@@ -66,9 +71,9 @@ defmodule ProjWeb.Router do
 
     live_session :require_authenticated_user,
       on_mount: [{ProjWeb.UserAuth, :ensure_authenticated}] do
-      live "/thread", ThreadsLive
-      live "/addfriend", AddFriendLive
-      live "friendslist", FriendsListLive
+      live "/home", IndexLive
+      live "/chat", ChatLive, :index
+      live "/chat/:category", ChatLive, :category
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
     end

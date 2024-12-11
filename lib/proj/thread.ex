@@ -16,6 +16,6 @@ defmodule Proj.Threads.Thread do
     |> cast(attrs, [:topic, :body, :users_id])
     |> validate_required([:topic, :body, :users_id])
     |> validate_length(:topic, min: 1, max: 64)
-    |> validate_length(:body, min: 1, max: 1024)
+    |> validate_length(:body, min: 1, max: 4096)
   end
 end

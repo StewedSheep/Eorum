@@ -1,55 +1,10 @@
-defmodule ProjWeb.PostFormComponent do
+defmodule ProjWeb.ThreadCreateComponent do
   use ProjWeb, :live_component
 
   alias Proj.Threads
   alias Proj.Threads.Thread
 
-  def render(assigns) do
-    ~H"""
-    <div class="box-border p-4 border-4 rounded border-purple-900 bg-purple-800">
-      <div class="flex items-center justify-between">
-        <h1 class="text-white">Make a post</h1>
-
-        <button
-          data-collapse-target="collapse"
-          class="rounded-md bg-pink-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-pink-700 focus:shadow-none active:bg-pink-700 hover:bg-pink-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-          type="button"
-          phx-click={JS.toggle_class("rotate-180", to: "#collapse-svg")}
-        >
-          <svg
-            id="collapse-svg"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            class="w-4 h-4"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-      </div>
-
-      <div
-        data-collapse="collapse"
-        class="block h-0 w-full basis-full overflow-hidden transition-all duration-150 ease-in-out"
-      >
-        <.form for={@form} phx-submit="save" phx-change="validate" phx-target={@myself}>
-          <.input field={@form[:topic]} placeholder="Title" autocomplete="off" />
-          <.input field={@form[:body]} placeholder="Content" autocomplete="off" phx-debounce="blur" />
-          <.button
-            class="buttons flex"
-            style="margin-top: 10px; margin-right: 10px;"
-            phx-disable-with="posting..."
-          >
-            Post
-          </.button>
-        </.form>
-      </div>
-      <script src="https://unpkg.com/@material-tailwind/html@latest/scripts/collapse.js">
-      </script>
-    </div>
-    """
-  end
+  import SaladUI.Accordion
 
   def mount(socket) do
     changeset = Threads.change_thread(%Thread{})
@@ -72,13 +27,11 @@ defmodule ProjWeb.PostFormComponent do
 
     case Threads.create_thread(params) do
       # happy path
-      {:ok, _thread} ->
-        # update existing threads list
-        # socket = update(socket, :threads, fn threads -> [thread | threads] end)
-
-        changeset = Threads.change_thread(%Thread{}, params)
-
-        {:noreply, assign(socket, :form, to_form(changeset))}
+      {:ok, thread} ->
+        # update existing threads list in parent view
+        send(self(), {:new_thread_signal, Map.put(thread, :username, socket.assigns.current_user.username)})
+        #Clears form after operations complete
+        {:noreply, assign(socket, :form, to_form(Threads.change_thread(%Thread{})))}
 
       # sad path
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -94,7 +47,35 @@ defmodule ProjWeb.PostFormComponent do
 
     {:noreply, assign(socket, form: to_form(changeset))}
   end
+
+  def render(assigns) do
+    ~H"""
+    <div class="box-border p-4 rounded-lg mx-4 md:mx-auto max-w-md md:max-w-2xl rounded border-purple-600 border-2 bg-purple-800">
+    <.accordion>
+    <.accordion_item>
+    <.accordion_trigger group="my-group">
+      <div class="flex items-center justify-between">
+      Is it accessible?
+      </div>
+    </.accordion_trigger>
+      <.accordion_content>
+        <.form for={@form} phx-submit="save" phx-change="validate" phx-target={@myself}>
+          <.input field={@form[:topic]} placeholder="Title" autocomplete="off" />
+          <.input field={@form[:body]} placeholder="Content" autocomplete="off" type="textarea" phx-debounce="blur" />
+          <.button
+            class="buttons flex"
+            style="margin-top: 10px; margin-right: 10px;"
+            phx-disable-with="posting..."
+          >
+            Post
+          </.button>
+        </.form>
+        </.accordion_content>
+      </.accordion_item>
+      </.accordion>
+      </div>
+    """
+  end
 end
 
-# TODO: KEEP COLLAPSE STATE ON FORM
 # NOTE: NEED TO THINK IF SHOULD REDIRECT TO THE POST AFTER POSTING

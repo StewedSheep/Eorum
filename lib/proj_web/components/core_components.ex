@@ -231,8 +231,8 @@ defmodule ProjWeb.CoreComponents do
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-pink-700 hover:bg-pink-600 py-2 px-3",
-        "text-sm font-semibold leading-6 text-white active:text-white/80",
+        "phx-submit-loading:opacity-75 rounded-lg bg-[#9741E8] hover:bg-[#9C4CE7] py-2 px-3 text-white",
+        "text-sm font-semibold leading-6 active:text-white/80",
         @class
       ]}
       {@rest}

@@ -1,7 +1,12 @@
-<main class="px-4 py-20 sm:px-6 lg:px-8">
-  <div class="mx-auto max-w-2xl">
-    <.flash_group flash={@flash} />
+<main class="">
+  <.flash_group flash={@flash} />
+  <!-- Sidebar -->
+  <%= if @current_user do %>
+    <%= live_render(@socket, ProjWeb.SidebarLive,
+      id: "sidebar-live",
+      sticky: true
+    ) %>
+  <% end %>
 
-    <%= @inner_content %>
-  </div>
+  <%= @inner_content %>
 </main>

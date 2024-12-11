@@ -44,6 +44,15 @@ defmodule ProjWeb.UserAuth do
     conn
   end
 
+  # defp put_user_token(conn, _) do
+  #   if current_user = conn.assigns[:current_user] do
+  #     token = Phoenix.Token.sign(conn, "user socket", current_user.id)
+  #     assign(conn, :user_token, token)
+  #   else
+  #     conn
+  #   end
+  # end
+
   # This function renews the session ID and erases the whole
   # session to avoid fixation attacks. If there is any data
   # in the session you may want to preserve after log in/log out,
@@ -225,5 +234,5 @@ defmodule ProjWeb.UserAuth do
 
   defp maybe_store_return_to(conn), do: conn
 
-  defp signed_in_path(_conn), do: ~p"/"
+  defp signed_in_path(_conn), do: ~p"/home"
 end

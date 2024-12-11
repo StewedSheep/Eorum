@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" class="[scrollbar-gutter:stable]">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content={get_csrf_token()} />
+    <meta name="user-token" content={nil} />
+    <.live_title suffix=" · Elixir Forum">
+      <%= assigns[:page_title] || "Eorum" %>
+    </.live_title>
+    <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
+    <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
+    </script>
+    <script>
+      /*to prevent Firefox FOUC, this must be here*/
+      let FF_FOUC_FIX;
+    </script>
+  </head>
+  <nav class="bg-white border-purple-200 dark:bg-purple-900">
+    <div class="max-w-screen-xl flex flex-wrap content-center justify-between mx-auto p-4">
+      <a href={~p"/"} class="flex items-center space-x-3 rtl:space-x-reverse">
+        <img src="/images/Elixir_logo.png" class="h-16" alt="Elixir Logo" />
+        <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+          Eorum
+        </span>
+      </a>
+      <%!-- Login and register --%>
+      <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+        <ul>
+          <li>
+            <.link href={~p"/users/log_in"} class="loginRegister">
+              Log in
+            </.link>
+          </li>
+          <li>
+            <.link href={~p"/users/register"} class="loginRegister">
+              Register
+            </.link>
+          </li>
+        </ul>
+      </div>
+      <%!-- Middle navigation links --%>
+    </div>
+  </nav>
+
+  <%= @inner_content %>
+</html>
