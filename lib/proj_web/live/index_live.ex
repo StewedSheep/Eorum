@@ -4,8 +4,6 @@ defmodule ProjWeb.IndexLive do
   alias ProjWeb.ThreadCreateComponent
   alias Proj.Threads
 
-  import SaladUI.Accordion
-
   def mount(_params, _session, socket) do
     socket = assign_new(socket, :threads, fn -> Threads.list_threads() end)
 
@@ -26,13 +24,12 @@ defmodule ProjWeb.IndexLive do
 
   def render(assigns) do
     ~H"""
-    <.accordion class="space-t-4 pt-10">
-    <.accordion_item>
+    <div class="space-t-4 pt-10">
+
       <%!-- Didnt have to make it into a live component but did just for learning sake
       (know that dead component would be preferred here as creating a new thread does not require state or live interaction)) --%>
       <.live_component module={ThreadCreateComponent} id={:new} current_user={@current_user} />
-      </.accordion_item>
-      <.accordion_item class="pt-6">
+
       <%!-- thread list --%>
       <%= for thread <- @threads do %>
         <div class="bg-[#F4F6D9] border-solid border-2 shadow-lg rounded-lg mx-4 md:mx-auto my-4 max-w-md md:max-w-2xl">
@@ -68,8 +65,7 @@ defmodule ProjWeb.IndexLive do
           </div>
         </div>
       <% end %>
-      </.accordion_item>
-    </.accordion>
+      </div>
     """
   end
 

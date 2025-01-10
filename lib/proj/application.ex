@@ -15,7 +15,6 @@ defmodule Proj.Application do
       # Start the Finch HTTP client for sending emails
       {Finch, name: Proj.Finch},
       ProjWeb.Presence,
-      TwMerge.Cache,
       # Start a worker by calling: Proj.Worker.start_link(arg)
       # {Proj.Worker, arg},
       # Start to serve requests, typically the last entry

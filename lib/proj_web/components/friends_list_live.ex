@@ -1,12 +1,9 @@
 defmodule ProjWeb.FriendsListLive do
   use ProjWeb, :live_view
 
-  import SaladUI.{Avatar, Card}
-
   alias ProjWeb.Presence
   alias Proj.Friends
   alias Proj.Accounts
-  # alias Proj.Repo
 
   @topic "user"
 
@@ -42,7 +39,7 @@ defmodule ProjWeb.FriendsListLive do
 
   # Update presences in socket assigns according to presence_diff
   def handle_info(%{event: "presence_diff", payload: diff}, socket) do
-    if socket.assigns.presences != nil do
+    if socket.assigns != nil do
       new_presences = Presence.handle_diff(socket.assigns.presences, diff)
       socket = assign(socket, :presences, new_presences)
       {:noreply, socket}
@@ -62,15 +59,12 @@ defmodule ProjWeb.FriendsListLive do
     end)
   end
 
-  attr :status, :atom, values: [:online, :offline, :away], default: :offline
+  attr(:status, :atom, values: [:online, :offline, :away], default: :offline)
 
   def profile_icon(assigns) do
     ~H"""
     <div class="relative inline-block p-1">
-      <.avatar>
-        <.avatar_image src="http://example.com/badimage.png" />
-        <.avatar_fallback class="w-14 h-14 bg-primary text-white">A</.avatar_fallback>
-      </.avatar>
+        <img class="w-14 h-14 bg-primary text-white rounded-full" src="https://www.feedingmatters.org/wp-content/uploads/2020/02/placeholder-user-400x400-1.png" />
       <span class={[
         "w-4 h-4 rounded-full absolute bottom-1 right-1",
         @status == :online && "bg-green-700",
@@ -87,16 +81,16 @@ defmodule ProjWeb.FriendsListLive do
     <div>
       <%!-- Loop through @friends --%>
       <nav class="flex min-w-[240px] flex-col gap-1 p-1.5">
-      <.card
+      <div
           :for={{"friends" <> _id, friend} <- @streams.friends}
           class="flex rounded-md hover:bg-slate-100 focus:bg-slate-100 rounded-lg shadow-sm"
       >
         <.profile_icon status={friend.status} />
-        <.card_header class="pt-1 pl-1">
-        <.card_title><%= friend.username %></.card_title>
-        <.card_description>#Last message</.card_description>
-        </.card_header>
-      </.card>
+        <div class="pt-1 pl-1">
+        <h1><%= friend.username %></h1>
+        <p>#Last message</p>
+        </div>
+      </div>
       </nav>
     </div>
     """

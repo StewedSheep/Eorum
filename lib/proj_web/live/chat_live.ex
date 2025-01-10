@@ -1,4 +1,4 @@
-defmodule ProjWeb.ChatLive do
+defmodule ProjWeb.ForumLive do
   use ProjWeb, :live_view
 
   # alias Proj.Chats
@@ -19,7 +19,7 @@ defmodule ProjWeb.ChatLive do
     current_room = socket.assigns.live_action
 
     if current_room && room_name == String.to_integer(room_name) do
-      send_update(ProjWeb.ChatLive,
+      send_update(ProjWeb.ForumLive,
         id: "chat-#{current_room}",
         messages: [message | socket.assigns.messages]
       )
@@ -73,7 +73,7 @@ defmodule ProjWeb.ChatLive do
             <li class="pt-6">
               <div
                 class="flex items-center mb-4 cursor-pointer hover:bg-purple-500 rounded-md"
-                phx-click={JS.navigate("/chat/general")}
+                phx-click={JS.navigate("/forum/general")}
               >
                 <div>
                   <h2 class="text-lg font-semibold">General</h2>
@@ -84,7 +84,7 @@ defmodule ProjWeb.ChatLive do
             <li>
               <div
                 class="flex items-center mb-4 cursor-pointer hover:bg-purple-500 rounded-md"
-                phx-click={JS.navigate("/chat/technology")}
+                phx-click={JS.navigate("/forum/technology")}
               >
                 <div>
                   <h2 class="text-lg font-semibold">Technology</h2>
@@ -95,7 +95,7 @@ defmodule ProjWeb.ChatLive do
             <li>
               <div
                 class="flex items-center mb-4 cursor-pointer hover:bg-purple-500 rounded-md"
-                phx-click={JS.navigate("/chat/elixir")}
+                phx-click={JS.navigate("/forum/elixir")}
               >
                 <div>
                   <h2 class="text-lg font-semibold">Elixir</h2>
@@ -106,7 +106,7 @@ defmodule ProjWeb.ChatLive do
             <li>
               <div
                 class="flex items-center mb-4 cursor-pointer hover:bg-purple-500 rounded-md"
-                phx-click={JS.navigate("/chat/phoenix")}
+                phx-click={JS.navigate("/forum/phoenix")}
               >
                 <div>
                   <h2 class="text-lg font-semibold">Phoenix</h2>

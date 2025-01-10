@@ -46,11 +46,13 @@ defmodule ProjWeb.Presence do
   end
 
   defp remove_presences(socket, leaves) do
+    IO.inspect(leaves, label: "leaves")
     user_ids =
       Enum.map(leaves, fn {user_id, _} -> user_id end)
 
+    # IO.inspect(socket.assigns.presences, label: "presences")
+    IO.inspect(user_ids, label: "user_ids")
     presences = Map.drop(socket.assigns.presences, user_ids)
-
     Phoenix.Component.assign(socket, presences: presences)
   end
 

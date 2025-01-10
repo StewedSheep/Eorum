@@ -8,6 +8,8 @@ let Forum = {
     },
 
 listenForMessages(channel_forum) {
+    const chatForm = document.getElementById("chat-form");
+    if (chatForm) {
     document.getElementById("chat-form").addEventListener("submit", function(e) {
         e.preventDefault()
 
@@ -19,7 +21,10 @@ listenForMessages(channel_forum) {
         channel_forum.push('shout', {sender_id: userId, name: userName, message: message})
 
         document.getElementById("user-msg").value = ""
-    })
+    })}
+    else {
+        console.error("Chat form not on this page");
+    }
 
     channel_forum.on('shout', (payload) => {
         let chatBox = document.querySelector("#chat-box");
