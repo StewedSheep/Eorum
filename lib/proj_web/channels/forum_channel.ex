@@ -23,8 +23,7 @@ defmodule ProjWeb.ForumChannel do
   # broadcast to everyone in the current topic (forum:lobby).
   @impl true
   def handle_in("shout", payload, socket) do
-    IO.inspect(payload, label: "shout")
-    Chats.create_forum(payload)
+    Chats.Forum.changeset(%Chats.Forum{}, payload) |> Proj.Repo.insert()
     broadcast(socket, "shout", payload)
     {:noreply, socket}
   end

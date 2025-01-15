@@ -1,45 +1,30 @@
 defmodule ProjWeb.ForumLive do
   use ProjWeb, :live_view
 
-  # alias Proj.Chats
+  alias Proj.Chats.Forums
 
   def mount(_params, _session, socket) do
-    messages = [
-      %{id: 1, sender_id: 1, name: "Alice", message: "Hi there!", timestamp: "10:00 AM"}
-    ]
-
     if connected?(socket) do
       Phoenix.PubSub.subscribe(Proj.PubSub, "forum:general")
     end
 
-    {:ok, assign(socket, live_action: socket.assigns.live_action, messages: messages)}
+    socket = stream(socket, :messages, Forums.get_messages())
+
+    {:ok,
+     assign(socket,
+       live_action: socket.assigns.live_action,
+       lowest_id: Forums.get_lowest_id() - 20
+     )}
   end
 
-  def handle_info({:message, room_name, message}, socket) do
-    current_room = socket.assigns.live_action
-
-    if current_room && room_name == String.to_integer(room_name) do
-      send_update(ProjWeb.ForumLive,
-        id: "chat-#{current_room}",
-        messages: [message | socket.assigns.messages]
-      )
+  def handle_event("scrolled-to-top", _, socket) do
+    if socket.assigns.lowest_id >= 1 do
+      messages = Forums.list_more_messages(socket.assigns.lowest_id)
+      socket = assign(socket, lowest_id: socket.assigns.lowest_id - 15)
+      {:noreply, stream(socket, :messages, messages, at: 0)}
+    else
+      {:noreply, socket}
     end
-  end
-
-  def handle_event("add_artificial_message", _params, socket) do
-    # Define artificial data
-    new_message = %{
-      id: Enum.count(socket.assigns.messages) + 1,
-      sender_id: 99,
-      name: "Artificial User",
-      message: "This is an artificial message.",
-      timestamp: NaiveDateTime.utc_now() |> NaiveDateTime.to_string()
-    }
-
-    # Update the list of messages
-    updated_messages = [new_message | socket.assigns.messages]
-
-    {:noreply, assign(socket, :messages, updated_messages)}
   end
 
   # Handle routing logic
@@ -59,12 +44,21 @@ defmodule ProjWeb.ForumLive do
     {:noreply, assign(socket, category: "General")}
   end
 
+  def format_timestamp(datetime) do
+    # Ensure that datetime is a DateTime struct
+    case DateTime.to_string(datetime) do
+      str when is_binary(str) ->
+        # Concatenate MM/DD and HH:MM
+        "#{String.slice(str, 5..6)}/#{String.slice(str, 8..9)} #{String.slice(str, 11..15)}"
+
+      _ ->
+        "Invalid datetime"
+    end
+  end
+
   def render(assigns) do
     ~H"""
     <div class="space-y-4 pt-10">
-      <button phx-click="add_artificial_message" class="bg-blue-500 text-white px-4 py-2 rounded">
-        Add Artificial Message
-      </button>
       <div class="flex justify-center items-stretch h-[70vh] bg-[#F4F6D9] border-solid border-purple-600 border-2 shadow-lg rounded-lg mx-4 mx-auto my-8 max-w-7xl">
         <!-- Left Sidebar -->
         <div class="w-1/6 bg-[#8054A8] text-white p-4">
@@ -122,78 +116,50 @@ defmodule ProjWeb.ForumLive do
             <h1 class="text-2xl border-b-2 font-semibold"><%= @category %></h1>
           </header>
           <!-- Chat Messages -->
-          <div id="chat-box" class="overflow-y-auto p-4 pb-4 flex-1">
-            <!-- Incoming Message -->
-            <div class="flex mb-4">
-              <div class="flex flex-col">
-                <div class="flex justify-between text-sm pt-2">
-                  <span class="font-medium text-gray-600">Alice</span>
-                  <span class="text-gray-500">Nov 24, 2024</span>
-                </div>
-                <div class="flex max-w-96 bg-white rounded-lg p-3 gap-3">
-                  <p class="text-gray-700">Hey Bob, how's it going?</p>
-                </div>
-              </div>
-            </div>
-            <!-- Outgoing Message -->
-            <div class="flex justify-end mb-4">
-              <div class="flex flex-col">
-                <!-- User and date information -->
-                <div class="flex justify-between text-sm pt-2">
-                  <span class="font-medium text-gray-600">Bob</span>
-                  <span class="text-gray-500">Nov 24, 2024</span>
-                </div>
-                <div class="flex max-w-96 bg-purple-700 text-white rounded-lg p-3 gap-3">
-                  <!-- Message content -->
-                  <p>
-                    Hi Alice! I'm good, just finished a great book. How about you?
-                  </p>
-                </div>
-              </div>
-            </div>
-            <%= for message <- @messages do %>
+          <div id="chat-box" phx-hook="Scroll" phx-update="stream" class="flex flex-col-reverse overflow-y-auto p-4 pb-4 flex-1 scroll-smooth">
+            <%= for { _, message } <- @streams.messages do %>
               <div class={
                 if message.sender_id == @current_user.id,
-                  do: "flex mb-4 justify-end",
-                  else: "flex mb-4 justify-start"
+                  do: "flex mb-2 justify-end",
+                  else: "flex mb-2 justify-start"
               }>
+
                 <div class={
                   if message.sender_id == @current_user.id,
-                    do: "flex flex-col max-w-96 rounded-lg p-3 gap-2 bg-purple-700 text-white",
-                    else: "flex flex-col max-w-96 rounded-lg p-3 gap-2 bg-white text-gray-700"
+                    do: "flex flex-col max-w-96 rounded-lg p-3 gap-1 bg-purple-700 text-white",
+                    else: "flex flex-col max-w-96 rounded-lg p-3 gap-1 bg-white text-gray-700"
                 }>
-                  <p><%= message.message %></p>
+                <div class="font-semibold"><%= if message.sender_id != @current_user.id, do: message.name %> </div>
+                  <p><%= message.id %> <%= message.message %></p>
                   <div class={
                     if message.sender_id == @current_user.id,
                       do: "text-gray-300 text-right text-xs",
                       else: "text-gray-500 text-xs"
                   }>
-                    <%= if message.sender_id == @current_user.id, do: "You", else: message.name %> - <%= message.timestamp %>
+                    <div class="text-sm">
+                    <%= format_timestamp(message.inserted_at) %>
+                  </div>
                   </div>
                 </div>
               </div>
             <% end %>
           </div>
           <!-- Input Field -->
-          <form id="chat-form" class="bg-gray-100 p-4 border-t border-gray-300">
             <div class="flex items-center">
-              <input type="hidden" id="user-id" value={@current_user.id} required />
-              <input type="hidden" id="user-name" value={@current_user.username} required />
-              <input
-                type="text"
-                id="user-msg"
-                placeholder="Type a message..."
+              <%!-- <input type="hidden" id="sender_id" value={@current_user.id} required /> --%>
+              <input type="hidden" id="name" value={@current_user.username} required />
+              <input type="hidden" id="sender-id" value={@current_user.id} required />
+              <input type="text" id="msg" placeholder="Your message"
                 class="flex-1 bg-white border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 required
               />
               <button
-                type="submit"
+                id="send"
                 class="ml-2 bg-purple-700 text-white px-4 py-2 rounded-lg hover:bg-purple-600"
               >
                 Send
               </button>
             </div>
-          </form>
         </div>
         <!-- Active Users Sidebar -->
         <div class="w-1/6 bg-[#8054A8] text-white p-4">
@@ -205,6 +171,9 @@ defmodule ProjWeb.ForumLive do
         </div>
       </div>
     </div>
+    <script>
+    window.userId = <%= @current_user.id %>;  // Inject the user_id into the JavaScript context
+    </script>
     """
   end
 end

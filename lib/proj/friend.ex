@@ -4,9 +4,9 @@ defmodule Proj.Friends.Friend do
   alias Proj.Accounts.User
 
   schema "friends" do
-    field :accepted, :boolean, default: false
-    belongs_to :sender_user, User, foreign_key: :sender_id
-    belongs_to :receiver_user, User, foreign_key: :receiver_id
+    field(:accepted, :boolean, default: false)
+    belongs_to(:sender_user, User, foreign_key: :sender_id)
+    belongs_to(:receiver_user, User, foreign_key: :receiver_id)
     timestamps(type: :utc_datetime)
   end
 

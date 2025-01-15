@@ -3,17 +3,18 @@ defmodule Proj.Chats.Forum do
   import Ecto.Changeset
 
   schema "general_messages" do
-    field :sender_id, :string
-    field :name, :string
-    field :body, :string
+    field(:sender_id, :integer)
+    field(:name, :string)
+    field(:message, :string)
 
     timestamps(type: :utc_datetime)
   end
 
   @doc false
-  def changeset(forum, attrs) do
-    forum
-    |> cast(attrs, [:sender_id, :name, :body])
-    |> validate_required([:sender_id, :name, :body])
+  def changeset(message, attrs) do
+    message
+    |> cast(attrs, [:sender_id, :name, :message])
+    |> validate_required([:sender_id, :name, :message])
+    |> validate_length(:message, min: 1)
   end
 end

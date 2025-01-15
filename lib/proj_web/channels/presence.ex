@@ -57,7 +57,6 @@ defmodule ProjWeb.Presence do
   end
 
   # Populate the presence list with user schemas
-  # TODO : Delete this if not used
   # def fetch(_topic, presences) do
   #   IO.inspect(presences)
 
