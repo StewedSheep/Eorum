@@ -111,7 +111,7 @@ defmodule ProjWeb.ForumLive do
           </ul>
         </div>
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col">
+        <div id="chat" phx-hook="Chat" class="flex-1 flex flex-col">
           <header class="p-4 text-gray-700">
             <h1 class="text-2xl border-b-2 font-semibold"><%= @category %></h1>
           </header>
