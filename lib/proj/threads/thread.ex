@@ -3,11 +3,13 @@ defmodule Proj.Threads.Thread do
   import Ecto.Changeset
 
   schema "threads" do
-    field :topic, :string
-    field :body, :string
-    field :users_id, :integer
-    belongs_to :users, Proj.Accounts.User, define_field: false
+    field(:topic, :string)
+    field(:body, :string)
+    field(:users_id, :integer)
+    belongs_to(:users, Proj.Accounts.User, define_field: false)
 
+    has_many(:thread_likes, Proj.Threads.Likes, foreign_key: :threads_id)
+    has_many(:thread_comments, Proj.Threads.Comments, foreign_key: :threads_id)
     timestamps()
   end
 

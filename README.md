@@ -18,9 +18,8 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 TODO:
 
-Profile dropdown alignment
-thread creating and db
-
-
-Maybe footer??
-Maybe friendslist filtering more effective query
+move online indicator from presence to db (maybe also dark mode)
+add dark-mode
+add profile pictures
+add dm-s
+add presence for active users in forum

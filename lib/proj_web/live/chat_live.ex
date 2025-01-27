@@ -40,21 +40,9 @@ defmodule ProjWeb.ForumLive do
   end
 
   # Routes "without a category" to general
-  def handle_params(_params, _uri, socket) when socket.assigns.live_action == :index do
-    {:noreply, assign(socket, category: "General")}
-  end
-
-  def format_timestamp(datetime) do
-    # Ensure that datetime is a DateTime struct
-    case DateTime.to_string(datetime) do
-      str when is_binary(str) ->
-        # Concatenate MM/DD and HH:MM
-        "#{String.slice(str, 5..6)}/#{String.slice(str, 8..9)} #{String.slice(str, 11..15)}"
-
-      _ ->
-        "Invalid datetime"
-    end
-  end
+  # def handle_params(_params, _uri, socket) when socket.assigns.live_action == :index do
+  #   {:noreply, assign(socket, category: "General")}
+  # end
 
   def render(assigns) do
     ~H"""
@@ -130,14 +118,14 @@ defmodule ProjWeb.ForumLive do
                     else: "flex flex-col max-w-96 rounded-lg p-3 gap-1 bg-white text-gray-700"
                 }>
                 <div class="font-semibold"><%= if message.sender_id != @current_user.id, do: message.name %> </div>
-                  <p><%= message.id %> <%= message.message %></p>
+                  <p><%= message.message %></p>
                   <div class={
                     if message.sender_id == @current_user.id,
                       do: "text-gray-300 text-right text-xs",
                       else: "text-gray-500 text-xs"
                   }>
                     <div class="text-sm">
-                    <%= format_timestamp(message.inserted_at) %>
+                    <%= Calendar.strftime(message.inserted_at, "%H:%M %d %b") %>
                   </div>
                   </div>
                 </div>
@@ -172,7 +160,8 @@ defmodule ProjWeb.ForumLive do
       </div>
     </div>
     <script>
-    window.userId = <%= @current_user.id %>;  // Inject the user_id into the JavaScript context
+    // Inject the user_id into the JavaScript context to check if the message belongs to the current user
+    window.userId = <%= @current_user.id %>;
     </script>
     """
   end

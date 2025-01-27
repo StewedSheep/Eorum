@@ -52,7 +52,6 @@ defmodule ProjWeb.ThreadCreateComponent do
   end
 
   def handle_event("toggle_selected", _params, socket) do
-    # Toggle selected value between 0 and 1
     selected = if socket.assigns.selected == 1, do: 0, else: 1
     {:noreply, assign(socket, selected: selected)}
   end
@@ -60,7 +59,6 @@ defmodule ProjWeb.ThreadCreateComponent do
   def render(assigns) do
     ~H"""
       <div class="box-border p-4 rounded-lg mx-4 md:mx-auto max-w-md md:max-w-2xl rounded border-purple-600 border-2 bg-purple-800">
-
           <ul class="shadow-box">
             <!-- Dropdown form trigger -->
             <button type="button" class="w-full px-2 py-2 text-left" phx-click="toggle_selected" phx-target={@myself}>
@@ -85,7 +83,6 @@ defmodule ProjWeb.ThreadCreateComponent do
               </div>
             </div>
           </ul>
-
       </div>
     """
   end

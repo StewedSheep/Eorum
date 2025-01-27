@@ -13,6 +13,11 @@ defmodule Proj.Accounts do
     Repo.get_by(User, username: username)
   end
 
+  def get_username!(id) do
+    user = Repo.get(User, id)
+    user.username
+  end
+
   @doc """
   Gets a user by email.
 
