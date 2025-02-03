@@ -1,10 +1,10 @@
 defmodule ProjWeb.ForumChannel do
   use ProjWeb, :channel
 
-  alias Proj.Chats
+  alias Proj.Forum
 
   @impl true
-  def join("forum:general", payload, socket) do
+  def join("forum", payload, socket) do
     if authorized?(payload) do
       {:ok, socket}
     else
@@ -20,10 +20,12 @@ defmodule ProjWeb.ForumChannel do
   # end
 
   # It is also common to receive messages from the client and
-  # broadcast to everyone in the current topic (forum:lobby).
+  # broadcast to everyone in the current topic.
   @impl true
   def handle_in("shout", payload, socket) do
-    Chats.Forum.changeset(%Chats.Forum{}, payload) |> Proj.Repo.insert()
+    IO.inspect(payload, label: "payload")
+
+    Forum.create_message(payload)
     broadcast(socket, "shout", payload)
     {:noreply, socket}
   end

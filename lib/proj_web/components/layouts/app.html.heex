@@ -4,6 +4,7 @@
   <%= if @current_user do %>
     <%= live_render(@socket, ProjWeb.SidebarLive,
       id: "sidebar-live",
+      session: %{"current_user" => @current_user},
       sticky: true
     ) %>
   <% end %>

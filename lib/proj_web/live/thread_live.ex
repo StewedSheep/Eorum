@@ -132,7 +132,7 @@ defmodule ProjWeb.IndexLive.ThreadLive do
                     <label class="block text-gray-700 font-semibold mb-2" for="comment_body">
                         Comment
                     </label>
-                    <.input id={"threads_id-#{@thread.id}"} field={@form[:threads_id]} type="hidden" value={@thread.id}/>
+                    <.input id={"threads_id-#{@thread.id}"} field={@form[:threads_id]} hidden value={@thread.id}/>
                     <.input id={"body-#{@thread.id}"} field={@form[:body]} placeholder="Your two cents..." autocomplete="off" type="textarea" phx-debounce="blur" />
                 </div>
                 <.button

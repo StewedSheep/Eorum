@@ -1,11 +1,12 @@
 defmodule ProjWeb.SidebarLive do
   use ProjWeb, :live_view
 
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
     socket =
       assign(socket,
         selected_tab: :tab_1,
-        sidebar_open: false
+        sidebar_open: false,
+        current_user: Map.get(session, "current_user")
       )
 
     {:ok, socket, layout: false}

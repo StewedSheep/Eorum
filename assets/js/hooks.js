@@ -5,7 +5,7 @@ let Hooks = {};
 
 Hooks.Chat = {
     mounted() {
-        let channel_forum = socket.channel("forum:general", {})
+        let channel_forum = socket.channel("forum", {})
         channel_forum.join()
             .receive("ok", resp => { console.log("Joined chat successfully", resp) })
             .receive("error", resp => { console.log("Unable to join chat", resp) })
@@ -17,12 +17,16 @@ Hooks.Chat = {
     },
 
   listenForMessages(channel) {
-      const ul = document.getElementById('chat-box');    // list of messages.
-      const user_id = document.getElementById('sender-id');// id of message sender
-      const name = document.getElementById('name');      // name of message sender
-      const msg = document.getElementById('msg');        // message input field
-      const send = document.getElementById('send');      // send button
+      // define incoming message fields
+      const user_id = document.getElementById('sender-id');
+      const name = document.getElementById('name');
+      const msg = document.getElementById('msg');
+      // const room = document.getElementById('room');
+      const send = document.getElementById('send');
       // ul.scrollTop = ul.scrollHeight;
+
+      // TODO
+      // set handle event for room change to set js el pointer
 
 
       channel.on('shout', function (payload) {
@@ -30,17 +34,18 @@ Hooks.Chat = {
         });
         
         
-        // Send the message to the server on "shout" channel
+        // Send the message to the server on "forum" channel listening for shout
         function sendMessage() {
         
           channel.push('shout', {        
-            name: name.value, // get value of "name" of person sending the message.
+            name: name.value,
             sender_id: user_id.value,
-            message: msg.value,          // get message text (value) from msg input field.
-            inserted_at: new Date()      // date + time of when the message was sent
+            message: msg.value,
+            inserted_at: new Date(),
+            room: document.getElementById('room').value
           });
-        
-          msg.value = '';                // reset the message input field for next message.
+          // Reset message field
+          msg.value = '';
         }
         
         // Render the message with Tailwind styles
@@ -51,14 +56,12 @@ Hooks.Chat = {
           const div = document.createElement("div"); // create new list item DOM element
       
           div.innerHTML = `
-          <div class="flex mb-2 ${
+           <div class="flex mb-2 px-2 ${
                     isCurrentUser ? 'justify-end' : 'justify-start'
                 }">
-
                   <div class="flex flex-col max-w-96 rounded-lg p-3 gap-1 ${
                     isCurrentUser ? 'bg-purple-700 text-white' : 'bg-white text-gray-700'
                 }">
-                
                   <div class="font-semibold">${isCurrentUser ? '' : payload.name}</div>
                     <p>${payload.message}</p>
                     <div class="text-xs ${
@@ -73,9 +76,9 @@ Hooks.Chat = {
           `
 
           // Append to list of messages
-          ul.prepend(div);
+          document.getElementById('chat-box-' + room.value).prepend(div);
           // trigger event for custom scroll logic in hooks
-          ul.dispatchEvent(new Event('custom:update'));
+          document.getElementById('chat-box-' + room.value).dispatchEvent(new Event('custom:update'));
         }
         
         // Listen for the [Enter] keypress event to send a message:
@@ -106,7 +109,7 @@ Hooks.Chat = {
 Hooks.Scroll = {
     // Mounted position is at the bottom
   mounted() {
-    const el = document.getElementById('chat-box');
+    const el = document.getElementById('chat-box-' + this.el.dataset.room);
 
     // Listen for the custom event
     el.addEventListener('scroll', () => {

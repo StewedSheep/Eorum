@@ -13,8 +13,8 @@ defmodule ProjWeb.UserSocket do
   # Uncomment the following line to define a "room:*" topic
   # pointing to the `ProjWeb.RoomChannel`:
   #
-  channel "user", ProjWeb.UsersChannel
-  channel "forum:*", ProjWeb.ForumChannel
+  channel("user", ProjWeb.UsersChannel)
+  channel("forum", ProjWeb.ForumChannel)
   #
   # To create a channel file, use the mix task:
   #
