@@ -6,8 +6,6 @@ defmodule Proj.Threads.Comments do
 
   schema "comments" do
     field(:body, :string)
-    # field(:users_id, :integer)
-    # field(:threads_id, :integer)
     belongs_to(:threads, Proj.Threads.Thread)
     belongs_to(:users, Proj.Accounts.User)
     has_many(:comment_likes, Proj.Threads.CommentLikes, foreign_key: :comments_id)
