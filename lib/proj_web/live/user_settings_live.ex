@@ -5,14 +5,14 @@ defmodule ProjWeb.UserSettingsLive do
 
   def render(assigns) do
     ~H"""
-    <.header class="text-center">
-      <a class="font-semibold text-brand text-white">
+    <.header class="text-center space-t-4 pt-10">
+      <a class="font-semibold text-brand">
         Account Settings
       </a>
-      <p class="text-sm text-zinc-300">Manage your account email address and password settings</p>
+      <p class="text-sm ">Manage your account email address and password settings</p>
     </.header>
 
-    <div class="space-y-12 divide-y">
+    <div class="space-y-12 divide-y  md:mx-auto max-w-md md:max-w-2xl">
       <div>
         <.simple_form
           for={@email_form}

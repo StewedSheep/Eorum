@@ -6,7 +6,7 @@
     <meta name="csrf-token" content={get_csrf_token()} />
     <meta name="user-token" content={nil} />
     <.live_title suffix=" · Elixir Forum">
-      <%= assigns[:page_title] || "Eorum" %>
+      {assigns[:page_title] || "Eorum"}
     </.live_title>
     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
@@ -43,5 +43,5 @@
     </div>
   </nav>
 
-  <%= @inner_content %>
+  {@inner_content}
 </html>

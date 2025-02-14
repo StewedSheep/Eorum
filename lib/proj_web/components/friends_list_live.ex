@@ -13,7 +13,7 @@ defmodule ProjWeb.FriendsListLive do
     friends = Enum.map(friends, fn friend -> %{id: friend.id, username: friend.username} end)
 
     if connected?(socket) do
-      Phoenix.PubSub.subscribe(Proj.PubSub, @topic)
+      Presence.subscribe(@topic)
     end
 
     presences =
@@ -64,7 +64,10 @@ defmodule ProjWeb.FriendsListLive do
   def profile_icon(assigns) do
     ~H"""
     <div class="relative inline-block p-1">
-        <img class="w-14 h-14 bg-primary text-white rounded-full" src="https://www.feedingmatters.org/wp-content/uploads/2020/02/placeholder-user-400x400-1.png" />
+      <img
+        class="w-14 h-14 bg-primary text-white rounded-full"
+        src="https://www.feedingmatters.org/wp-content/uploads/2020/02/placeholder-user-400x400-1.png"
+      />
       <span class={[
         "w-4 h-4 rounded-full absolute bottom-1 right-1",
         @status == :online && "bg-green-700",
@@ -81,16 +84,16 @@ defmodule ProjWeb.FriendsListLive do
     <div>
       <%!-- Loop through @friends --%>
       <nav class="flex min-w-[240px] flex-col gap-1 p-1.5">
-      <div
+        <div
           :for={{"friends" <> _id, friend} <- @streams.friends}
           class="flex rounded-md hover:bg-slate-100 focus:bg-slate-100 rounded-lg shadow-sm"
-      >
-        <.profile_icon status={friend.status} />
-        <div class="pt-1 pl-1">
-        <h1><%= friend.username %></h1>
-        <p>#Last message</p>
+        >
+          <.profile_icon status={friend.status} />
+          <div class="pt-1 pl-1">
+            <h1>{friend.username}</h1>
+            <p>#Last message</p>
+          </div>
         </div>
-      </div>
       </nav>
     </div>
     """

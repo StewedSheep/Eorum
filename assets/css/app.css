@@ -3,6 +3,15 @@
 @import "tailwindcss/utilities";
 
 
+
+input[type="radio"]{
+  position: fixed;
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+
 /* hides list dots */
 ul {
     list-style: none;

@@ -28,32 +28,35 @@ defmodule ProjWeb.Presence do
   end
 
   def update_user(user, topic, new_meta) do
-    %{metas: [meta | _]} = get_by_key(topic, user.id)
+    user_metas = get_by_key(topic, user.id)
 
-    update(self(), topic, user.id, Map.merge(meta, new_meta))
+    if user_metas != [] do
+      %{metas: [meta]} = user_metas
+
+      update(self(), topic, user.id, Map.merge(meta, new_meta))
+    end
   end
 
-  def handle_diff(socket, diff) do
-    socket
+  def handle_diff(presences, diff) do
+    # IO.inspect(presences, label: "presences")
+    # IO.inspect(diff, label: "diff")
+
+    presences
     |> remove_presences(diff.leaves)
     |> add_presences(diff.joins)
   end
 
-  def add_presences(socket, joins) do
-    presences = Map.merge(socket.assigns.presences, simple_presence_map(joins))
-
-    Phoenix.Component.assign(socket, presences: presences)
+  def add_presences(presences, joins) do
+    Map.merge(presences, simple_presence_map(joins))
   end
 
-  defp remove_presences(socket, leaves) do
-    IO.inspect(leaves, label: "leaves")
+  defp remove_presences(presences, leaves) do
     user_ids =
-      Enum.map(leaves, fn {user_id, _} -> user_id end)
+      Enum.map(leaves, fn {user_id, _} ->
+        user_id
+      end)
 
-    # IO.inspect(socket.assigns.presences, label: "presences")
-    IO.inspect(user_ids, label: "user_ids")
-    presences = Map.drop(socket.assigns.presences, user_ids)
-    Phoenix.Component.assign(socket, presences: presences)
+    Map.drop(presences, user_ids)
   end
 
   # Populate the presence list with user schemas

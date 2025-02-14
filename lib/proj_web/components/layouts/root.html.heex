@@ -10,12 +10,14 @@
       <meta name="user-token" content={nil} />
     <% end %>
     <.live_title suffix=" · Elixir Forum">
-      <%= assigns[:page_title] || "Eorum" %>
+      {assigns[:page_title] || "Eorum"}
     </.live_title>
-    
+
     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
-    <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}></script>
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+    <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
+    </script>
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer>
+    </script>
     <script>
       /*to prevent Firefox FOUC, this must be here*/
       let FF_FOUC_FIX;
@@ -44,8 +46,8 @@
           class="dropdown-menu-arrow hidden absolute inset-x-50 top-[90px] right-[18px] z-50 flex min-w-[180px] overflow-auto rounded-md border border-purple-gray-50 bg-white p-3 font-sans text-sm font-normal shadow-lg shadow-blue-gray-500/10"
         >
           <li class="text-center text-[0.8125rem] leading-6">
-            <%= @current_user.username %> <br />
-            <%= @current_user.email %>
+            {@current_user.username} <br />
+            {@current_user.email}
           </li>
           <.link href={~p"/users/settings"} class="menulink">
             <.icon name="hero-cog-6-tooth-solid" class="w-[18px] h-[18px] bg-[#6b21a8]" />
@@ -90,5 +92,5 @@
       </div>
     </div>
   </nav>
-  <%= @inner_content %>
+  {@inner_content}
 </html>

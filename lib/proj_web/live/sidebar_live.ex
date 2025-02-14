@@ -60,19 +60,19 @@ defmodule ProjWeb.SidebarLive do
               <% :tab_1 -> %>
                 <%!-- Component for rendering the friends list tab content --%>
                 <%= if connected?(@socket) && @selected_tab == :tab_1 do %>
-                  <%= live_render(@socket, ProjWeb.FriendsListLive,
+                  {live_render(@socket, ProjWeb.FriendsListLive,
                     id: "friends_component",
                     session: %{"user_id" => @current_user.id}
-                  ) %>
+                  )}
                 <% end %>
               <% :tab_2 -> %>
                 <%!-- Component for rendering the add users tab content --%>
                 <%= if connected?(@socket) && @selected_tab == :tab_2 do %>
                   <div class="">
-                    <%= live_render(@socket, ProjWeb.AddFriendLive,
+                    {live_render(@socket, ProjWeb.AddFriendLive,
                       id: "add_users_component",
                       session: %{"user_id" => @current_user.id}
-                    ) %>
+                    )}
                   </div>
                 <% end %>
             <% end %>

@@ -8,12 +8,16 @@ defmodule ProjWeb.AddFriendLive do
     ~H"""
     <div class="relative flex flex-col">
       <nav class="flex min-w-[240px] flex-col gap-1 p-1.5">
-           <%!-- Search bar --%>
-          <div class="flex flex-col w-full px-4 py-3 rounded-md border-2 border-slate-400 overflow-hidden max-w-md mx-auto font-[sans-serif]">
-            <div class="flex">
-             <.icon name="hero-magnifying-glass-solid" class="flex-none w-[24px] h-[24px] bg-[#6b21a8] my-2 mr-2" />
-              <form class="flex-grow">
-              <input type="text"
+        <%!-- Search bar --%>
+        <div class="flex flex-col w-full px-4 py-3 rounded-md border-2 border-slate-400 overflow-hidden max-w-md mx-auto font-[sans-serif]">
+          <div class="flex">
+            <.icon
+              name="hero-magnifying-glass-solid"
+              class="flex-none w-[24px] h-[24px] bg-[#6b21a8] my-2 mr-2"
+            />
+            <form class="flex-grow">
+              <input
+                type="text"
                 phx-change="update_query"
                 phx-debounce="200"
                 name="query"
@@ -21,21 +25,23 @@ defmodule ProjWeb.AddFriendLive do
                 placeholder="Search For Accounts..."
                 autocomplete="off"
                 class="w-full bg-transparent text-sm border-none"
-                />
-              </form>
-            </div>
-            <%!-- Friend Search Results --%>
-            <ul class="flex-col">
-              <%= for result <- @results do %>
-                <% status = friendship_status(@current_user.id, result.id) %>
-                <li data-token={@token}><.user_card username={result.username} id={result.id} status={status} /></li>
-              <% end %>
-            </ul>
+              />
+            </form>
           </div>
-         <%!-- List active friends and pending requests --%>
+          <%!-- Friend Search Results --%>
+          <ul class="flex-col">
+            <%= for result <- @results do %>
+              <% status = friendship_status(@current_user.id, result.id) %>
+              <li data-token={@token}>
+                <.user_card username={result.username} id={result.id} status={status} />
+              </li>
+            <% end %>
+          </ul>
+        </div>
+        <%!-- List active friends and pending requests --%>
         <%= for user <- @users do %>
           <%= if user.id != @current_user.id do %>
-          <% status = friendship_status(@current_user.id, user.id) %>
+            <% status = friendship_status(@current_user.id, user.id) %>
             <%= if status != :none do %>
               <.user_card username={user.username} id={user.id} status={status} />
             <% end %>
@@ -68,35 +74,35 @@ defmodule ProjWeb.AddFriendLive do
 
   def user_card(assigns) do
     ~H"""
-      <div
-            role="button"
-            class="flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 rounded-lg border border-slate-200 shadow-sm"
-          >
-            <div class="mr-4 grid place-items-center"></div>
-            <div>
-              <h6 class=" font-medium p-3">
-                <%= @username %> #<%= @id %>
-              </h6>
-                <%= case @status do %>
-                  <% :none -> %>
-                    <.button class="bg-violet-700" phx-click="add_friend" phx-value-id={@id}>
-                      Add Friend
-                    </.button>
-                  <% :rec -> %>
-                    <.button class="bg-green-700" phx-click="accept_friend" phx-value-id={@id}>
-                      Accept request
-                    </.button>
-                  <% :sent -> %>
-                    <.button class="bg-red-700" phx-click="rem_request" phx-value-id={@id}>
-                      Remove request
-                    </.button>
-                  <% :friends -> %>
-                    <.button class="bg-gray-700" phx-click="rem_friend" phx-value-id={@id}>
-                      Delete friend
-                    </.button>
-                <% end %>
-              </div>
-            </div>
+    <div
+      role="button"
+      class="flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 rounded-lg border border-slate-200 shadow-sm"
+    >
+      <div class="mr-4 grid place-items-center"></div>
+      <div>
+        <h6 class=" font-medium p-3">
+          {@username} #{@id}
+        </h6>
+        <%= case @status do %>
+          <% :none -> %>
+            <.button class="bg-violet-700" phx-click="add_friend" phx-value-id={@id}>
+              Add Friend
+            </.button>
+          <% :rec -> %>
+            <.button class="bg-green-700" phx-click="accept_friend" phx-value-id={@id}>
+              Accept request
+            </.button>
+          <% :sent -> %>
+            <.button class="bg-red-700" phx-click="rem_request" phx-value-id={@id}>
+              Remove request
+            </.button>
+          <% :friends -> %>
+            <.button class="bg-gray-700" phx-click="rem_friend" phx-value-id={@id}>
+              Delete friend
+            </.button>
+        <% end %>
+      </div>
+    </div>
     """
   end
 

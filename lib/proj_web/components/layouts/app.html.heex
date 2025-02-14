@@ -2,12 +2,12 @@
   <.flash_group flash={@flash} />
   <!-- Sidebar -->
   <%= if @current_user do %>
-    <%= live_render(@socket, ProjWeb.SidebarLive,
+    {live_render(@socket, ProjWeb.SidebarLive,
       id: "sidebar-live",
       session: %{"current_user" => @current_user},
       sticky: true
-    ) %>
+    )}
   <% end %>
 
-  <%= @inner_content %>
+  {@inner_content}
 </main>
