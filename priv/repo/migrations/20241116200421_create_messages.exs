@@ -2,34 +2,34 @@ defmodule Proj.Repo.Migrations.CreateMessages do
   use Ecto.Migration
 
   def change do
-    create table(:general_messages) do
+    create table(:forum_general) do
       add :sender_id, :integer
       add :name, :string
-      add :body, :text
+      add :message, :text
 
       timestamps(type: :utc_datetime)
     end
 
-    create table(:technology_messages) do
+    create table(:forum_technology) do
       add :sender_id, :integer
       add :name, :string
-      add :body, :text
+      add :message, :text
 
       timestamps(type: :utc_datetime)
     end
 
-    create table(:elixir_messages) do
+    create table(:forum_elixir) do
       add :sender_id, :integer
       add :name, :string
-      add :body, :text
+      add :message, :text
 
       timestamps(type: :utc_datetime)
     end
 
-    create table(:plv_messages) do
+    create table(:forum_phoenix) do
       add :sender_id, :integer
       add :name, :string
-      add :body, :text
+      add :message, :text
 
       timestamps(type: :utc_datetime)
     end

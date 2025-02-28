@@ -27,13 +27,13 @@ defmodule ProjWeb.Presence do
     list(topic)
   end
 
-  def update_user(user, topic, new_meta) do
-    user_metas = get_by_key(topic, user.id)
+  def update_user(user_id, topic, new_meta) do
+    user_metas = get_by_key(topic, user_id)
 
     if user_metas != [] do
       %{metas: [meta]} = user_metas
 
-      update(self(), topic, user.id, Map.merge(meta, new_meta))
+      update(self(), topic, user_id, Map.merge(meta, new_meta))
     end
   end
 

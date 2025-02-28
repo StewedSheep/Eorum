@@ -3,11 +3,13 @@ defmodule Proj.Repo.Migrations.CreateThread do
 
   def change do
     create table(:threads) do
-      add :user_id, :integer, null: false
+      add :users_id, references(:users)
       add :topic, :string, null: false
       add :body, :string, null: false
 
       timestamps()
     end
+
+    create index(:threads, [:users_id])
   end
 end

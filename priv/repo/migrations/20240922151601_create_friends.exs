@@ -3,11 +3,14 @@ defmodule Proj.Repo.Migrations.CreateFriends do
 
   def change do
     create table(:friends) do
-      add :personId1, :integer
-      add :personId2, :integer
+      add :sender_id, :integer
+      add :receiver_id, :integer
       add :accepted, :boolean, default: false, null: false
 
       timestamps(type: :utc_datetime)
     end
+
+    create index(:friends, [:sender_id])
+    create index(:friends, [:receiver_id])
   end
 end

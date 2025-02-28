@@ -106,16 +106,18 @@ defmodule ProjWeb.AddFriendLive do
     """
   end
 
+  @doc """
+  Handles user search section by updating the search results based on the search value.
+  """
   def handle_event("update_query", %{"query" => query}, socket) do
-    results = if query == "", do: [], else: Friends.search(query)
+    results = if query == "", do: [], else: Friends.search(query, socket.assigns.current_user)
     IO.inspect(results, label: "results")
     IO.inspect(query, label: "query")
     {:noreply, assign(socket, query: query, results: results)}
   end
 
-  @doc """
-  Handles the "add_friend" event by creating a new friend relationship between the current user and the selected user.
-  """
+  # Handles the "add_friend" event by creating a new friend relationship between the current user and the selected user.
+
   def handle_event("add_friend", %{"id" => id}, socket) do
     Friends.create_friend(socket.assigns.current_user.id, String.to_integer(id))
     users = Accounts.get_users()

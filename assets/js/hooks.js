@@ -6,19 +6,29 @@ let Hooks = {};
 
 Hooks.Chat = {
     mounted() {
-        let channel_forum = socket.channel("forum", {room: this.el.dataset.room});
-        channel_forum.join()
-            .receive("ok", resp => { console.log("Joined chat successfully", resp) })
-            .receive("error", resp => { console.log("Unable to join chat", resp) })
-        listenForMessages(channel_forum);
+        this.channelForum = socket.channel("forum", {room: this.el.dataset.room});
+        this.channelForum.join()
+            .receive("ok", resp => { 
+                console.log("Joined chat successfully", resp);
+                listenForMessages(this.channelForum);
+            })
+            .receive("error", resp => { console.log("Unable to join chat", resp) });
     },
 
     updated() {
-      let channel_forum = socket.channel("forum", {room: this.el.dataset.room});
-      channel_forum.join()
-          .receive("ok", resp => { console.log("Joined chat successfully", resp) })
+      if (this.channelForum) {
+            this.channelForum.leave()
+                .receive("ok", () => { console.log("Left previous channel"); })
+                .receive("error", resp => { console.log("Unable to leave previous channel", resp); });
+        }
+
+      this.channelForum = socket.channel("forum", {room: this.el.dataset.room});
+      this.channelForum.join()
+          .receive("ok", resp => { console.log("Joined new chat successfully", resp);
+            listenForMessages(this.channelForum);
+           })
           .receive("error", resp => { console.log("Unable to join chat", resp) })
-      listenForMessages(channel_forum);
+      
     },
 
     destroyed() {

@@ -99,7 +99,7 @@ defmodule ProjWeb.IndexLive do
            form: to_form(Thread.change_thread(%Thread{}, %{})),
            threads:
              Thread.list_threads(
-               socket.assigns.page,
+               socket.assigns.current_page,
                socket.assigns.per_page,
                socket.assigns.sort_by
              ),
@@ -252,7 +252,7 @@ defmodule ProjWeb.IndexLive do
               <.icon name="hero-chevron-double-right" class="w-4 h-4" />
             </a>
           </nav>
-          
+
     <!-- Sort order dropdown -->
           <div class="flex justify-between">
             <!-- Items per page dropdown -->

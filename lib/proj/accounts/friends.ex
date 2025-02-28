@@ -10,9 +10,14 @@ defmodule Proj.Friends do
   #   |> Repo.preload([:sent_requests, :received_requests])
   # end
 
-  def search(query) do
+  def search(query, current_user) do
     query = "%#{String.downcase(query)}%"
-    Repo.all(from(u in Proj.Accounts.User, where: ilike(u.username, ^query), limit: 3))
+
+    Repo.all(
+      from u in Proj.Accounts.User,
+        where: ilike(u.username, ^query) and u.id != ^current_user.id,
+        limit: 3
+    )
   end
 
   def get_friends(current_user_id) do

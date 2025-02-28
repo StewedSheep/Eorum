@@ -7,7 +7,6 @@ defmodule ProjWeb.ForumLive do
   @topic "forum"
 
   def mount(_params, _session, socket) do
-    # When the LiveView mounts, set up initial state
     if connected?(socket) do
       # Subscribe to presence updates for lobby
       Presence.subscribe(@topic)
@@ -44,15 +43,9 @@ defmodule ProjWeb.ForumLive do
     {:noreply, socket}
   end
 
-  def handle_event("new_message", %{"message" => params}, socket) do
-    case Forum.create_message(params) do
-      {:error, _changeset} ->
-        {:noreply, socket}
-
-      {:ok, _message} ->
-        Forum.create_message(params)
-        {:noreply, socket}
-    end
+  def handle_info(%Phoenix.Socket.Broadcast{topic: "forum", event: "shout"}, socket) do
+    # Intentionally ignore "shout" events, handle them in forum_socket.js
+    {:noreply, socket}
   end
 
   # Add messages to the stream
@@ -77,7 +70,7 @@ defmodule ProjWeb.ForumLive do
       )
       |> stream(:messages, Forum.get_messages(room), reset: true)
 
-    Presence.update_user(socket.assigns.current_user, @topic, %{room: room})
+    Presence.update_user(socket.assigns.current_user.id, @topic, %{room: room})
 
     # IO.inspect(room, label: "room")
     # IO.inspect(socket.assigns.streams, label: "messages")
@@ -141,7 +134,7 @@ defmodule ProjWeb.ForumLive do
         </div>
 
         <.forum_chat_room room={@room} streams={@streams} current_user={@current_user} />
-        
+
     <!-- Active Users Sidebar -->
         <div class="w-1/6 bg-[#8054A8] text-white p-4">
           <h2 class="text-xl font-bold">Active Users</h2>
@@ -197,7 +190,7 @@ defmodule ProjWeb.ForumLive do
                     else: "text-gray-500 text-xs"
                 }>
                   <div class="text-sm">
-                    {Calendar.strftime(message.inserted_at, "%H:%M %d %b")}
+                    {Calendar.strftime(message.inserted_at, "%d/%m %H:%M")}
                   </div>
                 </div>
               </td>
@@ -219,14 +212,13 @@ defmodule ProjWeb.ForumLive do
         />
         <button
           id="send"
-          phx-submit="new_message"
           class="ml-2 bg-purple-700 text-white px-4 py-2 rounded-lg hover:bg-purple-600"
         >
           Send
         </button>
       </div>
       <script>
-        // Inject the user_id into the JavaScript context to check if the message belongs to the current user
+        // Inject the user_id into the JavaScript context to check if the message belongs to the current user and adjust UI accordingly
         window.userId = <%= @current_user.id %>;
       </script>
     </div>

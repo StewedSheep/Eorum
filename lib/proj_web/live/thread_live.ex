@@ -264,7 +264,7 @@ defmodule ProjWeb.IndexLive.ThreadLive do
                 Submit
               </.button>
             </div>
-            <.input
+            <input
               id={"threads_id-#{@thread.id}"}
               field={@form[:threads_id]}
               value={@thread.id}
