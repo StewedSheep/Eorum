@@ -7,8 +7,16 @@ defmodule ProjWeb.IndexLive.ThreadLive do
     {:ok, socket}
   end
 
-  def handle_event("save_comment", %{"comments" => comment_params}, socket) do
-    attrs = Map.put(comment_params, "users_id", socket.assigns.current_user.id)
+  def handle_event(
+        "save_comment",
+        %{"comments" => comment_params, "threads_id" => threads_id},
+        socket
+      ) do
+    attrs =
+      Map.put(comment_params, "users_id", socket.assigns.current_user.id)
+      |> Map.put("threads_id", threads_id)
+
+    IO.inspect(attrs, label: "comment_params")
 
     case Comments.create_comment(attrs) do
       {:ok, comment} ->
@@ -253,6 +261,7 @@ defmodule ProjWeb.IndexLive.ThreadLive do
           for={@form}
           phx-target={@target}
           phx-submit="save_comment"
+          phx-value-threads_id={@thread.id}
           class="sticky top-0 z-10 bg-[#fafbee] p-4 rounded-lg shadow-md"
         >
           <div class="mb-2">
@@ -264,12 +273,12 @@ defmodule ProjWeb.IndexLive.ThreadLive do
                 Submit
               </.button>
             </div>
-            <input
+            <%!-- <input
               id={"threads_id-#{@thread.id}"}
               field={@form[:threads_id]}
               value={@thread.id}
-              type="hidden"
-            />
+              class="hidden"
+            /> --%>
             <.input
               id={"body-#{@thread.id}"}
               field={@form[:body]}

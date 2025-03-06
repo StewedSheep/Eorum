@@ -19,7 +19,7 @@ defmodule Proj.Repo.Migrations.CreateLikes do
     end
 
     create table(:comment_likes) do
-      add(:comment_id, references(:comments, on_delete: :delete_all), null: false)
+      add(:comments_id, references(:comments, on_delete: :delete_all), null: false)
       add(:users_id, references(:users, on_delete: :delete_all), null: false)
       add(:is_like, :boolean, null: false)
 
@@ -30,11 +30,11 @@ defmodule Proj.Repo.Migrations.CreateLikes do
     create(index(:thread_likes, [:users_id]))
     create(unique_index(:thread_likes, [:threads_id, :users_id], name: :unique_thread_user_like))
 
-    create(index(:comment_likes, [:comment_id]))
+    create(index(:comment_likes, [:comments_id]))
     create(index(:comment_likes, [:users_id]))
 
     create(
-      unique_index(:comment_likes, [:comment_id, :users_id], name: :unique_comment_user_like)
+      unique_index(:comment_likes, [:comments_id, :users_id], name: :unique_comment_user_like)
     )
 
     create(index(:comments, [:threads_id]))

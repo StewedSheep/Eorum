@@ -20,11 +20,11 @@ defmodule Proj.Threads.CommentLikes do
     |> unique_constraint(:comments_id, name: :unique_comments_user_like)
   end
 
-  def get_comment_votes(thread_id, user_id) do
+  def get_comment_votes(comment_id, user_id) do
     # Query to count likes and dislikes
     query =
       from(tl in __MODULE__,
-        where: tl.comments_id == ^thread_id,
+        where: tl.comments_id == ^comment_id,
         group_by: tl.is_like,
         select: {tl.is_like, count(tl.id)}
       )
@@ -32,7 +32,7 @@ defmodule Proj.Threads.CommentLikes do
     # Query to get user's current like/dislike status
     user_query =
       from(tl in __MODULE__,
-        where: tl.comments_id == ^thread_id and tl.users_id == ^user_id,
+        where: tl.comments_id == ^comment_id and tl.users_id == ^user_id,
         select: tl.is_like
       )
 

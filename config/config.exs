@@ -13,7 +13,6 @@ config :proj,
 
 # Configures the endpoint
 config :proj, ProjWeb.Endpoint,
-  url: [host: "localhost"],
   adapter: Bandit.PhoenixAdapter,
   render_errors: [
     formats: [html: ProjWeb.ErrorHTML, json: ProjWeb.ErrorJSON],
