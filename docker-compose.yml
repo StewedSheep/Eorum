@@ -1,8 +1,7 @@
 version: '3'
 
 services:
-  web:
-    image: nicbet/phoenix:1.7.12
+  app:
     build: .
     ports:
       - "4000:4000"
@@ -11,6 +10,7 @@ services:
     environment:
       - DATABASE_URL=ecto://postgres:postgres@db/proj_dev
       - SECRET_KEY_BASE=XRHG4JbOq3aJLrhvznOdWNhc8NnXpu1zPuA+qrVDZKtcKgGLfs2sM3owUlZrsToD
+      - PHX_HOST=localhost
       - PORT=4000
     restart: always
 
