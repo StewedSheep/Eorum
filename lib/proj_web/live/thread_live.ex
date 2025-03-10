@@ -177,7 +177,7 @@ defmodule ProjWeb.IndexLive.ThreadLive do
             </div>
           </div>
           <%!-- Content of thread --%>
-          <p class="mt-3 text-gray-900 text-s">
+          <p class="mt-3 break-words text-gray-900 text-s">
             <%!--  Checks if thread.body contains more than 500 characters or 8 newlines and then truncates if true --%>
             <%= if (String.length(@thread.body) > 500 or (String.graphemes(@thread.body) |> Enum.count(&(&1 == "\n")) > 8)) and not @show_full do %>
               {@thread.body
