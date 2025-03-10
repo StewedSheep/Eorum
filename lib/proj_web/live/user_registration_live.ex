@@ -8,12 +8,15 @@ defmodule ProjWeb.UserRegistrationLive do
     ~H"""
     <div class="mx-auto max-w-sm">
       <.header class="text-center">
-        <a class="font-semibold text-brand text-white">
+        <a class="font-semibold text-brand">
           Register for an account
         </a>
-        <p class="text-sm text-zinc-300">
+        <p class="text-sm">
           Already registered?
-          <.link navigate={~p"/users/log_in"} class="font-semibold text-brand hover:underline">
+          <.link
+            navigate={~p"/users/log_in"}
+            class="font-semibold text-brand text-pink-700 hover:underline"
+          >
             Log in
           </.link>
           to your account now.

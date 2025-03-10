@@ -5,7 +5,7 @@ defmodule Proj.Repo.Migrations.CreateThread do
     create table(:threads) do
       add :users_id, references(:users)
       add :topic, :string, null: false
-      add :body, :string, null: false
+      add :body, :text, null: false
 
       timestamps()
     end

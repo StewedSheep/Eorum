@@ -49,6 +49,7 @@ defmodule Proj.Accounts.User do
     |> validate_email(opts)
     |> validate_username(opts)
     |> validate_password(opts)
+    |> put_change(:confirmed_at, %{DateTime.utc_now() | microsecond: {0, 0}})
   end
 
   defp validate_email(changeset, opts) do
@@ -103,7 +104,7 @@ defmodule Proj.Accounts.User do
   defp maybe_validate_unique_username(changeset, opts) do
     if Keyword.get(opts, :validate_username, true) do
       changeset
-      |> unsafe_validate_unique(:username, Proj.Repo)
+      |> unsafe_validate_unique_case_insensitive(:username, Proj.Repo)
       |> unique_constraint(:username)
     else
       changeset
@@ -178,6 +179,48 @@ defmodule Proj.Accounts.User do
       changeset
     else
       add_error(changeset, :current_password, "is not valid")
+    end
+  end
+
+  defp unsafe_validate_unique_case_insensitive(changeset, field, repo, opts \\ []) do
+    # Import necessary Ecto query functions
+    import Ecto.Query
+
+    value = get_change(changeset, field)
+
+    if value do
+      # Get the model name from the changeset
+      model = changeset.data.__struct__
+
+      # Proper query with named parameter
+      query =
+        from(m in model,
+          where: fragment("lower(?)", field(m, ^field)) == ^String.downcase(value)
+        )
+
+      # Add any additional scoping specified in the options
+      query =
+        Enum.reduce(Keyword.get(opts, :scope, []), query, fn scope_field, query_acc ->
+          where(query_acc, [m], field(m, ^scope_field) == ^get_field(changeset, scope_field))
+        end)
+
+      # Check if we're updating an existing record
+      query =
+        if id = get_field(changeset, :id) do
+          where(query, [m], m.id != ^id)
+        else
+          query
+        end
+
+      if repo.exists?(query) do
+        add_error(changeset, field, "has already been taken",
+          validation: :unsafe_unique_case_insensitive
+        )
+      else
+        changeset
+      end
+    else
+      changeset
     end
   end
 end

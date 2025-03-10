@@ -6,7 +6,7 @@ defmodule ProjWeb.Endpoint do
   # Set :encryption_salt if you would also like to encrypt it.
   @session_options [
     store: :cookie,
-    key: "_proj_key",
+    key: "KJ435BB6",
     signing_salt: "96VZART5",
     same_site: "Lax"
   ]

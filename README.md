@@ -23,3 +23,10 @@ add dark-mode
 add profile pictures
 add dm-s
 add presence for active users in forum
+
+
+FIX LOGIN redirect ( )
+Long posts dont post ( )
+usernames duplicate case sensitive ( )
+scrollbar ( )
+comment window max height ( )

@@ -255,7 +255,7 @@ defmodule ProjWeb.IndexLive.ThreadLive do
 
   def thread_comments(assigns) do
     ~H"""
-    <div class={"border rounded-b-lg bg-gray-[#F4F6D9] overflow-y-auto relative transform transition-all duration-500 #{if @comment_toggle == 1, do: "max-h-[calc(100vh-600px)]", else: "max-h-0 opacity-0"}"}>
+    <div class={"border rounded-b-lg bg-gray-[#F4F6D9] overflow-y-auto relative transform transition-all duration-500 #{if @comment_toggle == 1, do: "max-h-[calc(70vh)]", else: "max-h-0 opacity-0"}"}>
       <%= if @current_user.id != 0 do %>
         <.form
           for={@form}
@@ -318,7 +318,7 @@ defmodule ProjWeb.IndexLive.ThreadLive do
                   >
                     <.icon name="hero-trash" class="w-6 h-6" />
                   </button>
-
+                  
     <!-- The sliding menu -->
                   <div
                     id={"menu-#{comment.id}"}
