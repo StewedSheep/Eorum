@@ -134,7 +134,7 @@ defmodule ProjWeb.ForumLive do
         </div>
 
         <.forum_chat_room room={@room} streams={@streams} current_user={@current_user} />
-
+        
     <!-- Active Users Sidebar -->
         <div class="w-1/6 bg-[#8054A8] text-white p-4">
           <h2 class="text-xl font-bold">Active Users</h2>
