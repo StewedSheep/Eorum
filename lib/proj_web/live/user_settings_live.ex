@@ -13,7 +13,7 @@ defmodule ProjWeb.UserSettingsLive do
     </.header>
 
     <div class="space-y-12 divide-y  md:mx-auto max-w-md md:max-w-2xl">
-      <div>
+      <%!-- <div>
         <.simple_form
           for={@email_form}
           id="email_form"
@@ -34,7 +34,7 @@ defmodule ProjWeb.UserSettingsLive do
             <.button phx-disable-with="Changing...">Change Email</.button>
           </:actions>
         </.simple_form>
-      </div>
+      </div> --%>
       <div>
         <.simple_form
           for={@password_form}
@@ -105,37 +105,37 @@ defmodule ProjWeb.UserSettingsLive do
     {:ok, socket}
   end
 
-  def handle_event("validate_email", params, socket) do
-    %{"current_password" => password, "user" => user_params} = params
+  # def handle_event("validate_email", params, socket) do
+  #   %{"current_password" => password, "user" => user_params} = params
 
-    email_form =
-      socket.assigns.current_user
-      |> Accounts.change_user_email(user_params)
-      |> Map.put(:action, :validate)
-      |> to_form()
+  #   email_form =
+  #     socket.assigns.current_user
+  #     |> Accounts.change_user_email(user_params)
+  #     |> Map.put(:action, :validate)
+  #     |> to_form()
 
-    {:noreply, assign(socket, email_form: email_form, email_form_current_password: password)}
-  end
+  #   {:noreply, assign(socket, email_form: email_form, email_form_current_password: password)}
+  # end
 
-  def handle_event("update_email", params, socket) do
-    %{"current_password" => password, "user" => user_params} = params
-    user = socket.assigns.current_user
+  # def handle_event("update_email", params, socket) do
+  #   %{"current_password" => password, "user" => user_params} = params
+  #   user = socket.assigns.current_user
 
-    case Accounts.apply_user_email(user, password, user_params) do
-      {:ok, applied_user} ->
-        Accounts.deliver_user_update_email_instructions(
-          applied_user,
-          user.email,
-          &url(~p"/users/settings/confirm_email/#{&1}")
-        )
+  #   case Accounts.apply_user_email(user, password, user_params) do
+  #     {:ok, applied_user} ->
+  #       Accounts.deliver_user_update_email_instructions(
+  #         applied_user,
+  #         user.email,
+  #         &url(~p"/users/settings/confirm_email/#{&1}")
+  #       )
 
-        info = "A link to confirm your email change has been sent to the new address."
-        {:noreply, socket |> put_flash(:info, info) |> assign(email_form_current_password: nil)}
+  #       info = "A link to confirm your email change has been sent to the new address."
+  #       {:noreply, socket |> put_flash(:info, info) |> assign(email_form_current_password: nil)}
 
-      {:error, changeset} ->
-        {:noreply, assign(socket, :email_form, to_form(Map.put(changeset, :action, :insert)))}
-    end
-  end
+  #     {:error, changeset} ->
+  #       {:noreply, assign(socket, :email_form, to_form(Map.put(changeset, :action, :insert)))}
+  #   end
+  # end
 
   def handle_event("validate_password", params, socket) do
     %{"current_password" => password, "user" => user_params} = params

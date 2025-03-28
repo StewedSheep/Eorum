@@ -7,8 +7,16 @@ defmodule ProjWeb.IndexLive.ThreadLive do
     {:ok, socket}
   end
 
-  def handle_event("save_comment", %{"comments" => comment_params}, socket) do
-    attrs = Map.put(comment_params, "users_id", socket.assigns.current_user.id)
+  def handle_event(
+        "save_comment",
+        %{"comments" => comment_params, "threads_id" => threads_id},
+        socket
+      ) do
+    attrs =
+      Map.put(comment_params, "users_id", socket.assigns.current_user.id)
+      |> Map.put("threads_id", threads_id)
+
+    IO.inspect(attrs, label: "comment_params")
 
     case Comments.create_comment(attrs) do
       {:ok, comment} ->
@@ -169,7 +177,7 @@ defmodule ProjWeb.IndexLive.ThreadLive do
             </div>
           </div>
           <%!-- Content of thread --%>
-          <p class="mt-3 text-gray-900 text-s">
+          <p class="mt-3 break-words text-gray-900 text-s">
             <%!--  Checks if thread.body contains more than 500 characters or 8 newlines and then truncates if true --%>
             <%= if (String.length(@thread.body) > 500 or (String.graphemes(@thread.body) |> Enum.count(&(&1 == "\n")) > 8)) and not @show_full do %>
               {@thread.body
@@ -247,12 +255,13 @@ defmodule ProjWeb.IndexLive.ThreadLive do
 
   def thread_comments(assigns) do
     ~H"""
-    <div class={"border rounded-b-lg bg-gray-[#F4F6D9] overflow-y-auto relative transform transition-all duration-500 #{if @comment_toggle == 1, do: "max-h-[calc(100vh-600px)]", else: "max-h-0 opacity-0"}"}>
+    <div class={"border rounded-b-lg bg-gray-[#F4F6D9] overflow-y-auto relative transform transition-all duration-500 #{if @comment_toggle == 1, do: "max-h-[calc(70vh)]", else: "max-h-0 opacity-0"}"}>
       <%= if @current_user.id != 0 do %>
         <.form
           for={@form}
           phx-target={@target}
           phx-submit="save_comment"
+          phx-value-threads_id={@thread.id}
           class="sticky top-0 z-10 bg-[#fafbee] p-4 rounded-lg shadow-md"
         >
           <div class="mb-2">
@@ -264,12 +273,12 @@ defmodule ProjWeb.IndexLive.ThreadLive do
                 Submit
               </.button>
             </div>
-            <input
+            <%!-- <input
               id={"threads_id-#{@thread.id}"}
               field={@form[:threads_id]}
               value={@thread.id}
-              type="hidden"
-            />
+              class="hidden"
+            /> --%>
             <.input
               id={"body-#{@thread.id}"}
               field={@form[:body]}
@@ -309,7 +318,7 @@ defmodule ProjWeb.IndexLive.ThreadLive do
                   >
                     <.icon name="hero-trash" class="w-6 h-6" />
                   </button>
-
+                  
     <!-- The sliding menu -->
                   <div
                     id={"menu-#{comment.id}"}

@@ -19,7 +19,7 @@ config :proj, Proj.Repo,
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
 config :proj, ProjWeb.Endpoint,
-  http: [ip: {127, 0, 0, 1}, port: 4002],
+  http: [ip: {0, 0, 0, 0}, port: 4002],
   secret_key_base: "PgEWnkkGGlUpVdLc7QEhKcvLIggKaJNaPPtOXb61xynSAnTCUk08cKRM0YuZTW0R",
   server: false
 

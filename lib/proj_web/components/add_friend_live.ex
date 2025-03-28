@@ -81,7 +81,7 @@ defmodule ProjWeb.AddFriendLive do
       <div class="mr-4 grid place-items-center"></div>
       <div>
         <h6 class=" font-medium p-3">
-          {@username} #{@id}
+          {@username}
         </h6>
         <%= case @status do %>
           <% :none -> %>

@@ -2,29 +2,24 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-
-
-input[type="radio"]{
+input[type="radio"] {
   position: fixed;
   opacity: 0;
   pointer-events: none;
 }
 
-
-
 /* hides list dots */
 ul {
-    list-style: none;
-  }
+  list-style: none;
+}
 
-
-body { background-color: #eed5aa; }
+body {
+  background-color: #eed5aa;
+}
 
 .rotate-180 {
   transform: rotate(180deg);
 }
-
-
 
 .navlink {
   @apply block py-2 px-3 rounded md:hover:bg-transparent md:hover:text-[#9740e7] md:p-0 dark:text-white md:dark:hover:text-[#9740e7];
@@ -35,9 +30,10 @@ body { background-color: #eed5aa; }
 }
 
 .menulink {
-  @apply flex w-full cursor-pointer select-none items-center gap-2 rounded-md px-3 pt-[9px] pb-2 text-[0.8125rem] leading-6 text-start leading-tight outline-none transition-all
+  @apply flex w-full cursor-pointer select-none items-center gap-2 rounded-md px-3 pt-[9px] pb-2 text-[0.8125rem] leading-6 text-start leading-tight outline-none transition-all;
 }
 
-.profileMenuLink{
+.profileMenuLink {
   @apply block font-sans text-sm antialiased font-medium leading-normal hover:text-zinc-400;
 }
+
