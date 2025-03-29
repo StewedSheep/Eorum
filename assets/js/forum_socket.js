@@ -68,7 +68,7 @@ export default function listenForMessages(channel) {
         const currentElements = getElements();
         let isCurrentUser = payload.sender_id == window.userId;
 
-        if (isCurrentUser == ture){console.log("t")}
+        if (isCurrentUser == true){console.log("t")}
         
         const div = document.createElement("div");
         div.innerHTML = `
