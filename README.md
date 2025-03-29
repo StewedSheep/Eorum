@@ -92,7 +92,7 @@ Switching rooms loads the rooms latest 20 messages from the database and updates
    Scrolling is mostly handled by `Scroll` hook defined in `hooks.js`\
    It monitors the scroll position for events such as receiving new message or scrolling to the top\
    Scrolling to the top prepends 15 messages to the stream of messages.\
-   Automatically scrolls to the bottom to show new messages, but only if the user is already within 30% of the bottom.
+   On new message automatically scrolls to the bottom to show new messages, but only if the user is already within 30% of the bottom.
 
 #### Active users
 
