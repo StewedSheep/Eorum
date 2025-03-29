@@ -21,7 +21,7 @@ export default function listenForMessages(channel) {
         elements.send.removeEventListener('click', window.prevSendListener);
     }
 
-    // Store listeners for future cleanup
+    // Store listeners for future channel cleanup
     window.prevMsgListener = msgKeyPressListener;
     window.prevSendListener = sendClickListener;
 
@@ -67,6 +67,8 @@ export default function listenForMessages(channel) {
     function render_message(payload) {
         const currentElements = getElements();
         let isCurrentUser = payload.sender_id == window.userId;
+
+        if (isCurrentUser == ture){console.log("t")}
         
         const div = document.createElement("div");
         div.innerHTML = `
