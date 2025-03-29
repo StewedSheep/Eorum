@@ -99,7 +99,7 @@ Switching rooms loads the rooms latest 20 messages from the database and updates
 Active users list shows the users in the same room as yourself.\
 The flow of rendering the users list is explained under [presence](#presence)
 
-![Presence Demo]([https://i.gyazo.com/YOUR_GYAZO_ID.mp4](https://gyazo.com/c46de8b3ec591742a5dacb7eac4f6645))
+[Demo of ChatRoom Presence](https://gyazo.com/7cfff990630cd7e32b999c2a9b424304)
 
 ### Thread System
 
