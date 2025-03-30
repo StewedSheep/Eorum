@@ -6,35 +6,35 @@ let Hooks = {};
 
 Hooks.Chat = {
     mounted() {
-        this.channelForum = socket.channel("forum", {room: this.el.dataset.room});
+        this.channelForum = socket.channel("forum", {room: this.el.dataset.room, user_id: this.el.dataset.user_id});
         this.channelForum.join()
             .receive("ok", resp => { 
-                console.log("Joined chat successfully", resp);
+                console.log("Joined "+ room +" successfully", resp);
                 listenForMessages(this.channelForum);
             })
-            .receive("error", resp => { console.log("Unable to join chat", resp) });
+            .receive("error", resp => { console.log("Unable to join "+ room, resp) });
     },
 
     updated() {
       if (this.channelForum) {
             this.channelForum.leave()
-                .receive("ok", () => { console.log("Left previous channel"); })
-                .receive("error", resp => { console.log("Unable to leave previous channel", resp); });
+                .receive("ok", () => { console.log("Left "+ room +" channel"); })
+                .receive("error", resp => { console.log("Unable to leave "+ room, resp); });
         }
 
-      this.channelForum = socket.channel("forum", {room: this.el.dataset.room});
+      this.channelForum = socket.channel("forum", {room: this.el.dataset.room, user_id: this.el.dataset.user_id});
       this.channelForum.join()
-          .receive("ok", resp => { console.log("Joined new chat successfully", resp);
+          .receive("ok", resp => { console.log("Joined " + room + " successfully", resp);
             listenForMessages(this.channelForum);
            })
-          .receive("error", resp => { console.log("Unable to join chat", resp) })
+          .receive("error", resp => { console.log("Unable to join "+ room, resp) })
       
     },
 
     destroyed() {
       socket.channel("forum", {}).leave()
-          .receive("ok", () => { console.log("Left the forum channel"); })
-          .receive("error", (response) => { console.log("Unable to leave forum channel", response); });
+          .receive("ok", () => { console.log("Left  "+ room +"  channel"); })
+          .receive("error", (response) => { console.log("Unable to leave "+ room +" channel", response); });
     }
 };
 

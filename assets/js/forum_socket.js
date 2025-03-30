@@ -66,8 +66,8 @@ export default function listenForMessages(channel) {
     // Render message function stylize w tailwind
     function render_message(payload) {
         const currentElements = getElements();
-        let isCurrentUser = payload.sender_id == window.userId;
-
+        // Check if the message is from the current user(visual aspect)
+        let isCurrentUser = payload.sender_id == currentElements.user_id.value;
         if (isCurrentUser == ture){console.log("t")}
         
         const div = document.createElement("div");
