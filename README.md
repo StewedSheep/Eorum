@@ -89,23 +89,25 @@ Switching rooms loads the rooms latest 20 messages from the database and updates
       Messages from the current user are styled diffrently than those from others.
 
 - Messagebox scrolling
-   Scrolling is mostly handled by `Scroll` hook defined in `hooks.js`\
+  Scrolling is mostly handled by `Scroll` hook defined in `hooks.js`\
    It monitors the scroll position for events such as receiving new message or scrolling to the top\
    Scrolling to the top prepends 15 messages to the stream of messages.\
-   Automatically scrolls to the bottom to show new messages, but only if the user is already within 30% of the bottom.
+   On new message automatically scrolls to the bottom to show new messages, but only if the user is already within 30% of the bottom.
 
 #### Active users
 
 Active users list shows the users in the same room as yourself.\
 The flow of rendering the users list is explained under [presence](#presence)
 
+[Demo of ChatRoom Presence](https://gyazo.com/7cfff990630cd7e32b999c2a9b424304)
+
 ### Thread System
 
 #### Making threads
 
-   New threads can be created through a expandable form on the index page.\
-   New thread form has real-time validation with immediate UI updates.\
-   On successful post the form is reset and collapsed. On error it returns form validation errors.
+New threads can be created through a expandable form on the index page.\
+ New thread form has real-time validation with immediate UI updates.\
+ On successful post the form is reset and collapsed. On error it returns form validation errors.
 
 #### Comments and liking
 
