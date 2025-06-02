@@ -68,7 +68,7 @@ export default function listenForMessages(channel) {
         const currentElements = getElements();
         // Check if the message is from the current user(visual aspect)
         let isCurrentUser = payload.sender_id == currentElements.user_id.value;
-        if (isCurrentUser == ture){console.log("t")}
+        if (isCurrentUser == true){console.log("t")}
         
         const div = document.createElement("div");
         div.innerHTML = `
