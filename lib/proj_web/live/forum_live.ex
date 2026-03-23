@@ -50,11 +50,17 @@ defmodule ProjWeb.ForumLive do
 
   # Add messages to the stream
   def handle_event("scrolled-to-top", _, socket) do
-    if socket.assigns.lowest_id_on_stream >= 1 do
+    if socket.assigns.lowest_id_on_stream > 0 do
       messages =
         Forum.list_more_messages(socket.assigns.lowest_id_on_stream, socket.assigns.room)
 
-      socket = assign(socket, lowest_id_on_stream: socket.assigns.lowest_id_on_stream - 15)
+      new_lowest =
+        case messages do
+          [] -> socket.assigns.lowest_id_on_stream
+          msgs -> msgs |> Enum.map(& &1.id) |> Enum.min()
+        end
+
+      socket = assign(socket, lowest_id_on_stream: new_lowest)
       {:noreply, stream(socket, :messages, messages, dom_id: &":messages-#{&1.id}")}
     else
       {:noreply, socket}
@@ -62,18 +68,20 @@ defmodule ProjWeb.ForumLive do
   end
 
   def switch_room(room, socket) do
+    messages = Forum.get_messages(room)
+
+    lowest =
+      case messages do
+        [] -> 0
+        msgs -> msgs |> Enum.map(& &1.id) |> Enum.min()
+      end
+
     socket =
       socket
-      |> assign(
-        room: room,
-        lowest_id_on_stream: Forum.get_lowest_id_on_stream(room) - 20
-      )
-      |> stream(:messages, Forum.get_messages(room), reset: true)
+      |> assign(room: room, lowest_id_on_stream: lowest)
+      |> stream(:messages, messages, reset: true)
 
     Presence.update_user(socket.assigns.current_user.id, @topic, %{room: room})
-
-    # IO.inspect(room, label: "room")
-    # IO.inspect(socket.assigns.streams, label: "messages")
     socket
   end
 

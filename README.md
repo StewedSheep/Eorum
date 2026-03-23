@@ -75,7 +75,7 @@ Switching rooms loads the rooms latest 20 messages from the database and updates
   4.  Database
 
       The Forum.create_message/1 function is called within the `shout` event handler\
-      The appropriate database table is selected based on the room value (general, technology, elixir, phoenix)\
+      Messages for all rooms are stored in a single `forum_messages` table, filtered by a `room` column\
       The message is inserted into the database ensuring the message history is preserved for new users joining the chat
 
   5.  Broadcast
@@ -167,8 +167,8 @@ Build and start the Docker containers from withing project folder `docker-compos
 
 ### To start the app with local dependencies
 
-Make sure you have Elixir: 1.17.3 and Phoenix 1.7.14
-Run `mix setup` to install and setup dependencies
+Make sure you have Elixir 1.17.3 (OTP 26) and Phoenix 1.7.14 installed (or use `asdf install` with the included `.tool-versions`)\
+Run `mix setup` to install and setup dependencies\
 Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
 
 Now you can visit [localhost:4000](http://localhost:4000) from your browser.
